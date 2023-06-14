@@ -14,7 +14,22 @@
 \ Modular arithmetic can optionally be applied to the leading integer x1
 \ Example 1.  24 00 01 with equivalence classes 0 .. 23 applied to the leading integer becomes 00 00 01
 \ 		since 24 + 0/60 + 1/3600 = 24*1 + (0 + 0/60 + 1/3600)
-\ Example 2.  24 00 01 with equivalence classes -11 .. 11 applied to the leading integer becomes -11 -59 -59
-\ 		since 24 + 0/60 + 1/3600 = 12*3 + (-11 - 59/60 - 59/3600)
+\ Example 2.  24 00 01 with equivalence classes -11 .. 11 applied to the leading integer becomes 
+\ 		since 
 \ both of these examples apply modulo 24 to the leading integer but with alternative representations
 \ note that in Example 2, each integer of the tripe carries the negative sign
+
+8 constant D
+
+: ~~~ ( n - x1 x2 x3)
+\ convert an interger number of D^2 units into a finite fraction
+	D /mod ( x1 quot)
+	D /mod ( x1 x2 x3)
+;
+
+: ~ ( x1 x2 x3 - n)
+\ convert a finite fraction into an integer number of D^2 units
+	rot D *		( x2 x3 D*x1 )
+	rot +	D *	( x3 D*{x2+D*x1} )
+	+				( x3+D*{x2+D*x1} )
+;
