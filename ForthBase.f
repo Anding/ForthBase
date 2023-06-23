@@ -61,17 +61,27 @@
 \ 		SHARED VARIABLE x  \ create variable x the first time
 \ 
 \ source2.f
-\ 		SHARED VARIBALE x  \ do nothing the 2nd time, x is not redefined
+\ 		SHARED VARIABLE x  \ do nothing the 2nd time, x is not redefined
 \ 
 	save-input					( xn...x1 n) 			\ save the state of the input buffer
 	BL parse-word 2drop 									\ skip the defining word
 	BL parse-word 				( ... c-addr n) 		\ find the name
-	search-context if			( ... 0 | xt -1)
+	search-context if			( ... 0 | xt -1)		\ ? can this be done with [UNDEFINED]
 		drop ndrop				\ name is already in the dictionary - do nothing
 	else
 		restore-input drop	\ otherwise restore the input buffer to just before the defiining word
 	then
 ;
+\ Notes (UH 2023-06-23)
+\ Typically
+\ 		[UNDEFINED] ... [IF] ...
+\ UH privately 
+\ 		?: 2dup over over ;
+\ 		require x ( the system knows about x)
+\ VolksForth 
+\ 		\needs 2dup : 2dup over over ;
+\ Albert vDH
+\ 		want x ( the system knows about x)
 
 
 \ synomyns *********************************************************************
