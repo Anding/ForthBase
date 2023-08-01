@@ -46,3 +46,17 @@
 \ print a single integer format finite fraction in triple integer format
 	~~~ ~~~.
 ;
+
+: ~~~$ ( x1 x2 x3 c -- c-addr u)
+\ format a triple integer format finte fraction as a string x1cx2cx3 where c is specified
+	>R 
+	<# 				\ proceeds from the rightmost character in the string
+	abs 0 # #s 2drop	\ numeric output works with double numbers
+	R@ HOLD
+	abs 0 # #s 2drop
+	R> HOLD
+	dup >R 
+	abs 0 # #s
+	R> sign
+	#>
+;
