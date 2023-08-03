@@ -60,3 +60,8 @@
 	R> sign
 	#>
 ;
+
+: ~$ ( f c -- c-addr u)
+\ format a single integer format finite fraction as a string x1cx2cx3 where c is specified
+	>R ~~~ R> ~~~$
+;
