@@ -96,4 +96,8 @@
 	count
 ;
 
+: TAB
+	9 emit
+;
+
 	
