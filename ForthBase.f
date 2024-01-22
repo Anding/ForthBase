@@ -54,6 +54,14 @@
 	free throw
 ;
 
+: ($CONSTANT) ( x caddr u)
+\ create a constant with a name supplied on the stack (rather than from the input stream)
+	($create) 
+		, 
+	does> 
+ 		@ 
+;
+
 : SHARED
 \ share a VARIABLE between source files
 \ 	further work... extend to CONSTANT by dropping the integer from the stack
