@@ -22,14 +22,14 @@
 
 60 VALUE ffBasis	\ the basis of the finite fractions, 'D'
 
-: ~~~ ( f - x1 x2 x3)
+: ~~~ ( x - x1 x2 x3)
 \ convert a finite fraction from single to triple integer format
 	ffBasis /mod ( x3 quot)
 	ffBasis /mod ( x3 x2 x1)
 	swap rot		 ( x1 x2 x3)
 ;
 
-: ~ ( x1 x2 x3 - f)
+: ~ ( x1 x2 x3 - x)
 \ convert a finite fraction from triple to single integer format
 	rot ffBasis *		( x2 x3 D*x1 )
 	rot +	ffBasis *	( x3 D*{x2+D*x1} )
@@ -42,13 +42,13 @@
 	. . . 
 ;
 
-: ~. ( f --)
+: ~. ( x --)
 \ print a single integer format finite fraction in triple integer format
 	~~~ ~~~.
 ;
 
 : ~~~$ ( x1 x2 x3 c -- c-addr u)
-\ format a triple integer format finte fraction as a string x1cx2cx3 where c is specified
+\ format a triple integer format finite fraction as a string x1cx2cx3 where c is specified
 	>R 
 	<# 				\ proceeds from the rightmost character in the string
 	abs 0 # #s 2drop	\ numeric output works with double numbers
@@ -61,7 +61,44 @@
 	#>
 ;
 
-: ~$ ( f c -- c-addr u)
+: ~$ ( x c -- c-addr u)
 \ format a single integer format finite fraction as a string x1cx2cx3 where c is specified
 	>R ~~~ R> ~~~$
+;
+
+: ~~~f$ ( x1 x2 x3 -- c-addr u)
+\ format format a triple integer format finite fraction as a fixed point string iii.ddd
+	swap ffBasis * + 100 *	\ documented in finite-fractions.xlxs
+	over 0< 2* 1+ 18 * +		\ for rounding - equivalent to int(x + 0.5)
+	36 /							( iii ddd)
+	<#
+	abs 0 # # # # 2drop		\ 4 d.p.
+	'.' HOLD
+	dup abs 0 #s
+	rot sign
+	#>
+;
+
+: f$~ ( c-addr u - x)
+\ parse a fixed point decimal string into a finite fraction in single integer format
+	'.' csplit ( raddr ru laddr lu)	\ r = fractional part with dot l = integer part
+	isinteger? 0= if 0 then >R
+	dup if						\ ru <> 0 there was a decimal point
+		swap 1+ swap 1-		\ skip the decimal point
+		isinteger? 0= if 0 then
+	then							\ if no decimal point 0 is on stack
+		36 *						\ documented in finite-fractions.xlxs
+		R@ 0< 2* 1+	*			\ fractional part takes the sign of the integer part		
+		R@ 0< 2* 1+ 50 * +	\ for rounding - equivalent to int(x + 0.5)
+		100 /
+		R> 3600 * +
+;
+
+: f$~~~ ( c-addr u - x1 x2 x3)
+\ parse a fixed point decimal string into a finite fraction in triple integer format
+	f$~ ~~~
+;
+: ~f$ ( x -- c-addr u)
+\ format format a single integer format finite fraction as a fixed point string iii.ddd
+	~~~ ~~~f$
 ;
