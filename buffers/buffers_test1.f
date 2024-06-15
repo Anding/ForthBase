@@ -1,7 +1,7 @@
 \ test for buffers.f
 
 include "%idir%\buffers.f"
-include "%idir%\..\simple-tester\simple-tester.f"
+include "%idir%\..\..\simple-tester\simple-tester.f"
 
 1024 allocate-buffer 
 constant buf1
