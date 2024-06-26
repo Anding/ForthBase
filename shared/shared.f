@@ -4,12 +4,14 @@
 \ the key-value table will hold the number of stack items to drop
 	map constant shared.map
 	s" VARIABLE"	shared.map >addr 0 swap !
+	s" 2VARIABLE"	shared.map >addr 0 swap !
 	s" CONSTANT"	shared.map >addr 1 swap !
 	s" VALUE"		shared.map >addr 1 swap !
-	s" buffer:"		shared.map >addr 1 swap !
-	s" buffer"		shared.map >addr 1 swap !	\ defined in ForthBase.f
+	s" BUFFER:"		shared.map >addr 1 swap !
+	s" BUFFER"		shared.map >addr 1 swap !	\ defined in ForthBase.f
+	s" 2CONSTANT" 	shared.map >addr 2 swap !
 	s" 2VALUE" 		shared.map >addr 2 swap !
-
+	
 : SHARED
 \ prefix for VARIABLE, CONSTANT, VALUE that will be shared between source files
 	save-input								( xn...x1 n) 			\ save the state of the input buffer
