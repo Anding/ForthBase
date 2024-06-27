@@ -7,10 +7,10 @@
 	s" 2VARIABLE"	shared.map >addr 0 swap !
 	s" CONSTANT"	shared.map >addr 1 swap !
 	s" VALUE"		shared.map >addr 1 swap !
-	s" BUFFER:"		shared.map >addr 1 swap !
-	s" BUFFER"		shared.map >addr 1 swap !	\ defined in ForthBase.f
+	s" BUFFER:"		shared.map >addr 1 swap !	\ redefined in ForthBase.f
 	s" 2CONSTANT" 	shared.map >addr 2 swap !
 	s" 2VALUE" 		shared.map >addr 2 swap !
+	s" STRING"		shared.map >addr 2 swap !	\ defined in ForthBase.f
 	
 : SHARED
 \ prefix for VARIABLE, CONSTANT, VALUE that will be shared between source files

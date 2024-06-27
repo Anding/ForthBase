@@ -29,9 +29,9 @@ synonym :alias synonym
  		@ 
 ;
 
-: BUFFER	 											
+: BUFFER: 											
 \ create a named buffer of n bytes
-\ VFX's word, BUFFER:, has failed with large sizes
+\ overwrite VFX's word to use allocate
 	create	( n <name> --)
 		allocate ( addr ior) throw ( addr) ,
 	does>		( -- addr)
@@ -47,7 +47,7 @@ synonym :alias synonym
 \ strings *********************************************************************
 
 :rem $, ( caddr u --)
-\ copy a string into the dictionary at HERE and ALLOT the necessary space
+\ place a counted string in the dictionary
 
 :alias $! place ( caddr u addr --) 
 \ store the counted string referenced on the stack as a counted string at addr
