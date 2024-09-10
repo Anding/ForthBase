@@ -21,6 +21,23 @@ synonym :alias synonym
 : END-ENUM drop ;
 : +ENUM dup 1+ swap CONSTANT ;
 
+\ define a ENUMerated strings data-structure to complement ENUM
+\ usage: see ForthBase_test1.f
+: BEGIN-ENUMS
+	CREATE ( <NAME> --)
+	DOES> ( n -- c addr u)
+ 		( n pfa) swap 0 ?do ( pfa) 
+ 			dup c@ + 1+ 
+ 			4 / 1+ 4 * 	\ since VFX aligns the dictionary on longwords
+ 		loop ( addr')
+ 		count
+;
+	
+: +" '"' parse $,	;			\ lay a counted string in the dictionary
+
+: END-ENUMS ;
+
+
 : ($CONSTANT) ( x caddr u)
 \ create a constant with a name supplied on the stack
 	($create) 
