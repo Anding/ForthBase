@@ -1,0 +1,1 @@
+copy release\ForthBase.dll c:\MPE\VFxForth\bin\ForthBase.dll

@@ -26,6 +26,21 @@ FORTHBASE_API void now_UTC(int* yyyymmdd, int* hhmmss)
 }
 
 // A UUID
-FORTHBASE_API void makeUUID(int* caddr)
+FORTHBASE_API char* makeUUID(char* caddr)
 {
+    UUID uuid;
+    RPC_CSTR uuidStr;
+
+    // Generate a UUID
+    (void) UuidCreate(&uuid); 
+
+    // Convert the UUID to a string
+    (void) UuidToStringA(&uuid, &uuidStr);
+    strcpy_s(caddr, UUID_length, uuidStr);
+
+    // Free the memory allocated for the UUID string
+    RpcStringFreeA(&uuidStr);
+
+    return(caddr);
+
 }

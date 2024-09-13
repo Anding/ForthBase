@@ -4,6 +4,10 @@
 #define _USE_MATH_DEFINES
 #include <math.h>
 #include <time.h>
+#include <rpc.h>
+
+#define UUID_length 37
+#pragma comment(lib, "Rpcrt4.lib")
 
 #ifdef FORTHBASE_EXPORTS
 	#define FORTHBASE_API __declspec(dllexport)
@@ -21,4 +25,4 @@ FORTHBASE_API void now_local(int* yyyymmdd, int* hhmmss);
 FORTHBASE_API void now_UTC(int* yyyymmdd, int* hhmmss);
 
 // A UUID
-FORTHBASE_API void makeUUID(int* caddr);
+FORTHBASE_API char* makeUUID(char* caddr);
