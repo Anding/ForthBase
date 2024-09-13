@@ -1,0 +1,76 @@
+## Copilot
+To generate a UUID in a Windows environment using Win32 APIs, you can use the UuidCreate function from the rpcdce.h header. Here's an example of how to do this:
+
+#include <stdio.h>
+#include <rpc.h>
+
+#pragma comment(lib, "Rpcrt4.lib")
+
+void generateUUID() {
+    UUID uuid;
+    RPC_CSTR uuidStr;
+
+    // Generate a UUID
+    UuidCreate(&uuid);
+
+    // Convert the UUID to a string
+    UuidToStringA(&uuid, &uuidStr);
+
+    // Print the UUID
+    printf("Generated UUID: %s\n", uuidStr);
+
+    // Free the memory allocated for the UUID string
+    RpcStringFreeA(&uuidStr);
+}
+
+int main() {
+    generateUUID();
+    return 0;
+}
+
+In this code:
+- UuidCreate(&uuid) generates a new UUID.
+- UuidToStringA(&uuid, &uuidStr) converts the UUID to a string format.
+- RpcStringFreeA(&uuidStr) frees the memory allocated for the UUID string.
+Make sure to link against the Rpcrt4.lib library, which is done using the #pragma comment(lib, "Rpcrt4.lib") directive.
+This should work on any Windows system with the necessary development tools installed. Let me know if you have any more questions or need further assistance!
+
+The `UuidToStringA` function converts a UUID to a string in the standard format `xxxxxxxx-xxxx-xxxx-xxxx-xxxxxxxxxxxx`, which includes 36 characters (32 hexadecimal digits and 4 hyphens) plus a null terminator. Therefore, the total size of the string is 37 bytes¹.
+
+Let me know if you need any more information or have further questions!
+
+Source: Conversation with Copilot, 13/9/2024
+(1) UuidToStringA function (rpcdce.h) - Win32 apps | Microsoft Learn. https://learn.microsoft.com/en-us/windows/win32/api/rpcdce/nf-rpcdce-uuidtostringa.
+(2) Identifiers 101: Understanding and Implementing UUIDs and ULIDs. https://dev.to/siddhantkcode/identifiers-101-understanding-and-implementing-uuids-and-ulids-2kc6.
+(3) Understanding UUIDs, ULIDs and String Representations - Sudhir. https://sudhir.io/uuids-ulids.
+(4) UuidToString function (rpcdce.h) - Win32 apps | Microsoft Learn. https://learn.microsoft.com/en-us/windows/win32/api/rpcdce/nf-rpcdce-uuidtostring.
+
+The `UUID` structure in C, as defined in the Windows API, is used to represent a universally unique identifier. Here is the definition of the `UUID` structure from the `rpcdce.h` header:
+
+```c
+typedef struct _UUID {
+    unsigned long  Data1;
+    unsigned short Data2;
+    unsigned short Data3;
+    unsigned char  Data4[8];
+} UUID;
+```
+
+In this structure:
+- `Data1` is a 32-bit unsigned integer.
+- `Data2` is a 16-bit unsigned integer.
+- `Data3` is a 16-bit unsigned integer.
+- `Data4` is an array of 8 bytes.
+
+This structure represents a 128-bit UUID, which is typically displayed in the format `xxxxxxxx-xxxx-xxxx-xxxx-xxxxxxxxxxxx`, where each `x` is a hexadecimal digit.
+
+Let me know if you need any more details or have further questions!
+
+Source: Conversation with Copilot, 13/9/2024
+(1) Universally unique identifier - Wikipedia. https://en.wikipedia.org/wiki/Universally_unique_identifier.
+(2) RFC 9562: Universally Unique IDentifiers (UUIDs) - RFC Editor. https://www.rfc-editor.org/rfc/rfc9562.html.
+(3) Unique identifier - Wikipedia. https://en.wikipedia.org/wiki/Unique_identifier.
+(4) What is a UUID?. https://uuidfactory.com/blog/what-is-a-uuid/.
+(5) UUIDs Explained: Your Ultimate Handbook to Understanding Unique Identifiers. https://www.tryflywheel.com/blog/uuids-explained-your-ultimate-handbook-to-understanding-unique-identifiers.
+(6) undefined. https://www.rfc-editor.org/info/rfc9562.
+(7) undefined. https://trustee.ietf.org/license-info%29.

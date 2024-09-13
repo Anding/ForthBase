@@ -1,0 +1,43 @@
+## Copilot
+To get the UTC time instead of the local time, you can use the gmtime function instead of localtime. Here's an updated version of the function that extracts and prints the current UTC time and date, including fractions of a second:
+
+#include <stdio.h>
+#include <time.h>
+
+void getCurrentUTCTimeAndDate() {
+    struct timespec ts;
+    struct tm *tm_info;
+
+    // Get the current time with nanoseconds
+    clock_gettime(CLOCK_REALTIME, &ts);
+    tm_info = gmtime(&ts.tv_sec);
+
+    // Extract year, month, day, hour, minute, second, and nanoseconds
+    int year = tm_info->tm_year + 1900;
+    int month = tm_info->tm_mon + 1;
+    int day = tm_info->tm_mday;
+    int hour = tm_info->tm_hour;
+    int minute = tm_info->tm_min;
+    int second = tm_info->tm_sec;
+    long nanoseconds = ts.tv_nsec;
+
+    // Print the current UTC time and date
+    printf("Current UTC Date and Time: %s", asctime(tm_info));
+    printf("Year: %d\n", year);
+    printf("Month: %d\n", month);
+    printf("Day: %d\n", day);
+    printf("Hour: %d\n", hour);
+    printf("Minute: %d\n", minute);
+    printf("Second: %d\n", second);
+    printf("Nanoseconds: %ld\n", nanoseconds);
+}
+
+int main() {
+    getCurrentUTCTimeAndDate();
+    return 0;
+}
+
+In this code:
+- gmtime(&ts.tv_sec) converts the time to UTC.
+- The rest of the code extracts and prints the year, month, day, hour, minute, second, and nanoseconds.
+This will give you the current UTC time and date. Let me know if you have any more questions or need further assistance!

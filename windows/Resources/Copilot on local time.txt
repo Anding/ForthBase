@@ -1,0 +1,44 @@
+## Copilot
+To get fractions of a second, you can use the clock_gettime function available in the time.h library on POSIX-compliant systems. This function provides higher resolution time, including nanoseconds. Here's an example of how you can modify the function to include fractions of a second:
+
+#include <stdio.h>
+#include <time.h>
+
+void getCurrentTimeAndDate() {
+    struct timespec ts;
+    struct tm *tm_info;
+
+    // Get the current time with nanoseconds
+    clock_gettime(CLOCK_REALTIME, &ts);
+    tm_info = localtime(&ts.tv_sec);
+
+    // Extract year, month, day, hour, minute, second, and nanoseconds
+    int year = tm_info->tm_year + 1900;
+    int month = tm_info->tm_mon + 1;
+    int day = tm_info->tm_mday;
+    int hour = tm_info->tm_hour;
+    int minute = tm_info->tm_min;
+    int second = tm_info->tm_sec;
+    long nanoseconds = ts.tv_nsec;
+
+    // Print the current time and date
+    printf("Current Date and Time: %s", asctime(tm_info));
+    printf("Year: %d\n", year);
+    printf("Month: %d\n", month);
+    printf("Day: %d\n", day);
+    printf("Hour: %d\n", hour);
+    printf("Minute: %d\n", minute);
+    printf("Second: %d\n", second);
+    printf("Nanoseconds: %ld\n", nanoseconds);
+}
+
+int main() {
+    getCurrentTimeAndDate();
+    return 0;
+}
+
+In this code:
+- clock_gettime(CLOCK_REALTIME, &ts) gets the current time with nanoseconds.
+- ts.tv_sec contains the seconds part of the time.
+- ts.tv_nsec contains the nanoseconds part of the time.
+This will print the current year, month, day, hour, minute, second, and nanoseconds. Let me know if you have any more questions or need further assistance!
