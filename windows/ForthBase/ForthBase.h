@@ -1,7 +1,7 @@
-// Astronomy calculations based on Duffett-Smith and Zwart, "Practical Astronomy"
 
 #pragma once
 #define _USE_MATH_DEFINES
+#include <stdio.h>
 #include <math.h>
 #include <time.h>
 #include <rpc.h>
@@ -15,14 +15,20 @@
 	#define FORTHBASE_API __declspec(dllimport)
 #endif
 
+// return a tm_info (formated time) object according to the specified flags
+void _now(struct tm tm_info, int flags);
+
 // Return a version number
 FORTHBASE_API int version();
 
-// The local time and date
-FORTHBASE_API void now_local(int* yyyymmdd, int* hhmmss);
+// The time and date, UTC or local
+FORTHBASE_API void now(int *yyyymmdd, int *hhmmss, int flags);
 
-// The UTC time and date
-FORTHBASE_API void now_UTC(int* yyyymmdd, int* hhmmss);
+// Timestamp
+FORTHBASE_API char *timestamp(char *caddr, int flags);
+
+// Timezone information
+FORTHBASE_API void timezone(int* bias, int* DST);
 
 // A UUID
-FORTHBASE_API char* makeUUID(char* caddr);
+FORTHBASE_API char *makeUUID(char *caddr);

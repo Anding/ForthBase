@@ -15,54 +15,82 @@ int version()
 
 }
 
-// The local time and date
-FORTHBASE_API void now_local(int* yyyymmdd, int* hhmmss)
+void _now(struct tm tm_info, int flags)
 {
     time_t t;
-    struct tm* tm_info;
 
     // Get the current time
     time(&t);
-    tm_info = localtime_s(&t);  // https://learn.microsoft.com/en-us/cpp/c-runtime-library/reference/localtime-s-localtime32-s-localtime64-s?view=msvc-170
+
+    // offset from "today" to "today's night" if requested
+    if ((flags & 2) == 2) {
+        t -= (time_t)60 * 60 * 12;
+    }
+
+    // format the current time in UT or local format in a tm_info structure
+    // https://learn.microsoft.com/en-us/cpp/c-runtime-library/reference/localtime-s-localtime32-s-localtime64-s?view=msvc-170
+    if ((flags & 1) == 0) {
+        (void)gmtime_s(&tm_info, &t);
+    }
+    else {
+        (void)localtime_s(&tm_info, &t);
+    }
+}
+
+// The time and date
+FORTHBASE_API void now(int* yyyymmdd, int* hhmmss, int flags)
+{
+    struct tm tm_info = { 0 };
+    _now(tm_info, flags);
 
     // Extract year, month, day, hour, minute, second, and nanoseconds
-    int year = tm_info->tm_year + 1900;
-    int month = tm_info->tm_mon + 1;
-    int day = tm_info->tm_mday;
-    int hour = tm_info->tm_hour;
-    int minute = tm_info->tm_min;
-    int second = tm_info->tm_sec;
+    int year = tm_info.tm_year + 1900;
+    int month = tm_info.tm_mon + 1;
+    int day = tm_info.tm_mday;
+    int hour = tm_info.tm_hour;
+    int minute = tm_info.tm_min;
+    int second = tm_info.tm_sec;
     
     *yyyymmdd = day + 60 * ( month + 60 * year);
     *hhmmss = second + 60 * ( minute + 60 * hour);
     
 }
 
-// The UTC time and date
-FORTHBASE_API void now_UTC(int* yyyymmdd, int* hhmmss)
+// now as a zero-terminated string timestamp in ISO standard 8601 format https://en.wikipedia.org/wiki/ISO_8601
+FORTHBASE_API char *timestamp(char *caddr, int flags)
 {
-    time_t t;
-    struct tm* tm_info;
+    struct tm tm_info = { 0 };
+    _now(tm_info, flags);
 
-    // Get the current time
-    time(&t);
-    tm_info = gmtime(&t);
+    // Extract year, month, day, hour, minute, second (fractions of seconds are ignored in this version)
+    int year = tm_info.tm_year + 1900;
+    int month = tm_info.tm_mon + 1;
+    int day = tm_info.tm_mday;
+    int hour = tm_info.tm_hour;
+    int minute = tm_info.tm_min;
+    int second = tm_info.tm_sec;
 
-    // Extract year, month, day, hour, minute, second, and nanoseconds
-    int year = tm_info->tm_year + 1900;
-    int month = tm_info->tm_mon + 1;
-    int day = tm_info->tm_mday;
-    int hour = tm_info->tm_hour;
-    int minute = tm_info->tm_min;
-    int second = tm_info->tm_sec;
-    
-    *yyyymmdd = day + 60 * ( month + 60 * year);
-    *hhmmss = second + 60 * ( minute + 60 * hour);
-  
+    (void) sprintf_s(caddr, 256, "%04d-%02d-%02dT%02d:%02d:%02d", year, month, day, hour, minute, second);
+    return(caddr);
+ 
+}
+
+// return the total bias between UT and local time in minutes (including DST if applicable) and a flag to indicate if DST is in operation
+FORTHBASE_API void timezone(int *bias, int *DST)
+{
+        TIME_ZONE_INFORMATION tzInfo;
+        DWORD result = GetTimeZoneInformation(&tzInfo);
+        // https://learn.microsoft.com/en-us/windows/win32/api/timezoneapi/ns-timezoneapi-time_zone_information
+
+        *bias = tzInfo.Bias;   
+        // UTC = local time + bias
+
+        *DST = (result == TIME_ZONE_ID_DAYLIGHT ? -1 : 0);
+
 }
 
 // A UUID
-FORTHBASE_API char* makeUUID(char* caddr)
+FORTHBASE_API char *makeUUID(char *caddr)
 {
     UUID uuid;
     RPC_CSTR uuidStr;

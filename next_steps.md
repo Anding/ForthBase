@@ -1,17 +1,6 @@
 ForthBase next steps
 ===================
 
-Developing 'speaking enums' 
-
-```
-BEGIN-ENUMS filter-name
-RED	+" Astronomic 3nm Red"
-GREEN	+" Astronomic 3nm Green"
-RED	+" Astronomic 3nm Blue"
-END-ENUMS
-```
-usage:
-
-``` RED ( -- 1)```
-
-``` RED filter-name ( -- c addr-u)```
+1. Test time functions in windows
+2. Add UT 'Z' or local time offset to timestamp
+3. Set HHMMSS to 0 in "this night" option
