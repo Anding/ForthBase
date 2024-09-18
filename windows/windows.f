@@ -5,8 +5,9 @@ LIBRARY: ForthBase.dll
 
 Extern: int "c" version( );
 Extern: int "c" makeUUID( char * caddr);
-Extern: void "c" now_local( int * yyyymmdd, int * hhmmss);
-Extern: void "c" now_UTC( int * yyyymmdd, int * hhmmss);
+Extern: int "c" timestamp ( char * caddr, int flgs);
+Extern: void "c" now( int * yyyymmdd, int * hhmmss, int flags);
+Extern: void "c" timezone( int * bias, int * DST);
 
 
 : make-UUID ( caddr -- caddr u)
@@ -14,4 +15,5 @@ Extern: void "c" now_UTC( int * yyyymmdd, int * hhmmss);
 \ cddr must have 37 bytes allocated
 	makeUUID zcount
 ;
+
 
