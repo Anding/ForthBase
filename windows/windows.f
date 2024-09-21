@@ -16,4 +16,10 @@ Extern: void "c" timezone( int * bias, int * DST);
 	makeUUID zcount
 ;
 
+: timestamp-now ( caddr flags -- caddr u)
+\ prepare a timestamp of system time
+\ cddr expects 256 bytes allocated
+	timestamp zcount
+;
+
 

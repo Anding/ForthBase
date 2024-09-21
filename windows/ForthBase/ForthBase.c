@@ -15,12 +15,12 @@ int version()
 
 }
 
-void _now(struct tm tm_info, int flags)
+void _now(struct tm *tm_info, int flags)
 {
     time_t t;
 
     // Get the current time
-    time(&t);
+    t = time(NULL);
 
     // offset from "today" to "today's night" if requested
     if ((flags & 2) == 2) {
@@ -30,10 +30,10 @@ void _now(struct tm tm_info, int flags)
     // format the current time in UT or local format in a tm_info structure
     // https://learn.microsoft.com/en-us/cpp/c-runtime-library/reference/localtime-s-localtime32-s-localtime64-s?view=msvc-170
     if ((flags & 1) == 0) {
-        (void)gmtime_s(&tm_info, &t);
+        (void)gmtime_s(tm_info, &t);
     }
     else {
-        (void)localtime_s(&tm_info, &t);
+        (void)localtime_s(tm_info, &t);
     }
 }
 
@@ -41,7 +41,7 @@ void _now(struct tm tm_info, int flags)
 FORTHBASE_API void now(int* yyyymmdd, int* hhmmss, int flags)
 {
     struct tm tm_info = { 0 };
-    _now(tm_info, flags);
+    _now(&tm_info, flags);
 
     // Extract year, month, day, hour, minute, second, and nanoseconds
     int year = tm_info.tm_year + 1900;
@@ -60,7 +60,7 @@ FORTHBASE_API void now(int* yyyymmdd, int* hhmmss, int flags)
 FORTHBASE_API char *timestamp(char *caddr, int flags)
 {
     struct tm tm_info = { 0 };
-    _now(tm_info, flags);
+    _now(&tm_info, flags);
 
     // Extract year, month, day, hour, minute, second (fractions of seconds are ignored in this version)
     int year = tm_info.tm_year + 1900;
