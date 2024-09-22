@@ -4,7 +4,7 @@
 #include "ForthBase.h"
 
 // Return a version number
-int version()
+int ForthBaseVersion()
 {
     int main_version = 0;
     int minor_version = 1;
@@ -38,45 +38,62 @@ void _now(struct tm *tm_info, int flags)
 }
 
 // The time and date
-FORTHBASE_API void now(int* yyyymmdd, int* hhmmss, int flags)
+FORTHBASE_API void ForthBaseNow(int* yyyymmdd, int* hhmmss, int flags)
 {
+    int year = 0, month = 0, day = 0, hour = 0, minute = 0, second = 0;
     struct tm tm_info = { 0 };
+
     _now(&tm_info, flags);
 
     // Extract year, month, day, hour, minute, second, and nanoseconds
-    int year = tm_info.tm_year + 1900;
-    int month = tm_info.tm_mon + 1;
-    int day = tm_info.tm_mday;
-    int hour = tm_info.tm_hour;
-    int minute = tm_info.tm_min;
-    int second = tm_info.tm_sec;
-    
+    year = tm_info.tm_year + 1900;
+    month = tm_info.tm_mon + 1;
+    day = tm_info.tm_mday;
+    if ((flags & 2) == 0) {             // time is N/A for "today's night"
+        hour = tm_info.tm_hour;
+        minute = tm_info.tm_min;
+        second = tm_info.tm_sec;
+    }
     *yyyymmdd = day + 60 * ( month + 60 * year);
     *hhmmss = second + 60 * ( minute + 60 * hour);
     
 }
 
 // now as a zero-terminated string timestamp in ISO standard 8601 format https://en.wikipedia.org/wiki/ISO_8601
-FORTHBASE_API char *timestamp(char *caddr, int flags)
+FORTHBASE_API char *ForthBaseTimestamp(char *caddr, int flags)
 {
+    int year = 0, month = 0, day = 0, hour = 0, minute = 0, second = 0;
+    int bias_hours = 0, bias_minutes = 0;
     struct tm tm_info = { 0 };
+    TIME_ZONE_INFORMATION tzInfo;
+
     _now(&tm_info, flags);
 
-    // Extract year, month, day, hour, minute, second (fractions of seconds are ignored in this version)
-    int year = tm_info.tm_year + 1900;
-    int month = tm_info.tm_mon + 1;
-    int day = tm_info.tm_mday;
-    int hour = tm_info.tm_hour;
-    int minute = tm_info.tm_min;
-    int second = tm_info.tm_sec;
+    year = tm_info.tm_year + 1900;
+    month = tm_info.tm_mon + 1;
+    day = tm_info.tm_mday;
+    if ((flags & 2) == 0) {
+        hour = tm_info.tm_hour;
+        minute = tm_info.tm_min;
+        second = tm_info.tm_sec;
+    }
 
-    (void) sprintf_s(caddr, 256, "%04d-%02d-%02dT%02d:%02d:%02d", year, month, day, hour, minute, second);
+    if ((flags & 1) == 0) {
+        (void)sprintf_s(caddr, TIMESTAMP_length, "%04d-%02d-%02dT%02d:%02d:%02dZ", year, month, day, hour, minute, second);
+    }
+    else {
+        (void)GetTimeZoneInformation(&tzInfo);
+        bias_hours = - tzInfo.Bias / 60;
+        bias_minutes = abs(tzInfo.Bias + bias_hours * 60);
+        (void)sprintf_s(caddr, TIMESTAMP_length, "%04d-%02d-%02dT%02d:%02d:%02d%+03d:%02d", year, month, day, hour, minute, second, bias_hours, bias_minutes );
+    }
+
     return(caddr);
  
 }
 
 // return the total bias between UT and local time in minutes (including DST if applicable) and a flag to indicate if DST is in operation
-FORTHBASE_API void timezone(int *bias, int *DST)
+FORTHBASE_API void ForthBaseTimezone(int *bias, int *DST)
 {
         TIME_ZONE_INFORMATION tzInfo;
         DWORD result = GetTimeZoneInformation(&tzInfo);
@@ -90,7 +107,7 @@ FORTHBASE_API void timezone(int *bias, int *DST)
 }
 
 // A UUID
-FORTHBASE_API char *makeUUID(char *caddr)
+FORTHBASE_API char *ForthbaseUUID(char *caddr)
 {
     UUID uuid;
     RPC_CSTR uuidStr;
