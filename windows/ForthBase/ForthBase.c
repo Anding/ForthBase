@@ -63,7 +63,7 @@ FORTHBASE_API void ForthBaseNow(int* yyyymmdd, int* hhmmss, int flags)
 FORTHBASE_API char *ForthBaseTimestamp(char *caddr, int flags)
 {
     int year = 0, month = 0, day = 0, hour = 0, minute = 0, second = 0;
-    int bias_hours = 0, bias_minutes = 0;
+    int bias = 0, bias_hours = 0, bias_minutes = 0;
     struct tm tm_info = { 0 };
     TIME_ZONE_INFORMATION tzInfo;
 
@@ -82,9 +82,10 @@ FORTHBASE_API char *ForthBaseTimestamp(char *caddr, int flags)
         (void)sprintf_s(caddr, TIMESTAMP_length, "%04d-%02d-%02dT%02d:%02d:%02dZ", year, month, day, hour, minute, second);
     }
     else {
-        (void)GetTimeZoneInformation(&tzInfo);
-        bias_hours = - tzInfo.Bias / 60;
-        bias_minutes = abs(tzInfo.Bias + bias_hours * 60);
+        WORD result = GetTimeZoneInformation(&tzInfo);
+        bias = tzInfo.Bias - (result == TIME_ZONE_ID_DAYLIGHT ? 60 : 0);    // tzInfo.Bias is the base timezone offset ignoring DST
+        bias_hours = - bias / 60;
+        bias_minutes = abs(bias + bias_hours * 60);
         (void)sprintf_s(caddr, TIMESTAMP_length, "%04d-%02d-%02dT%02d:%02d:%02d%+03d:%02d", year, month, day, hour, minute, second, bias_hours, bias_minutes );
     }
 
@@ -99,7 +100,7 @@ FORTHBASE_API void ForthBaseTimezone(int *bias, int *DST)
         DWORD result = GetTimeZoneInformation(&tzInfo);
         // https://learn.microsoft.com/en-us/windows/win32/api/timezoneapi/ns-timezoneapi-time_zone_information
 
-        *bias = tzInfo.Bias;   
+        *bias = tzInfo.Bias - (result == TIME_ZONE_ID_DAYLIGHT ? 60 : 0);
         // UTC = local time + bias
 
         *DST = (result == TIME_ZONE_ID_DAYLIGHT ? -1 : 0);

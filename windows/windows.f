@@ -19,7 +19,22 @@ Extern: void "c" ForthBaseTimezone( int * bias, int * DST);
 : timestamp ( caddr flags -- caddr u)
 \ prepare a timestamp of system time
 \ cddr expects 256 bytes allocated
+\ flags: 1 - local time (else UT)
 	ForthBaseTimestamp zcount
 ;
 
+: now ( flags -- yymmdd hhmmss) { flags | yymmdd hhmmss }	\ VFX locals
+\ return the current date and time in finite fraction format
+\ flags: 1 - local time (else UT)
+\ flags: 2 - subtract 12 hours and return the date and midnight (else actual)
+	addr yymmdd addr hhmmss flags ForthBaseNow
+	yymmdd hhmmss
+;
 
+: timezone ( -- bias DST) { | bias DST }
+\ return the bias in minutes  
+\ UT = LOCALTIME + bias ; bias includes DST if in operation
+\ return a flag to indicate if DST is operation
+	addr bias addr DST ForthBaseTimezone
+	bias DST
+;

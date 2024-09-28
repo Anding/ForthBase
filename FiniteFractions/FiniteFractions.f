@@ -36,10 +36,15 @@
 	+						( x3+D*{x2+D*x1} )
 ;
 
+: .2r ( n --)
+\ print a number with at least two digits padded with a leading zero
+	<# 0 ( double numnber) # #s #> type space
+;
+
 : ~~~. ( x1 x2 x3 --)
 \ print a triple integer format finite fraction in the order that it would have been keyed
 	swap rot		( x3 x2 x1)
-	. . . 
+	.2r .2r .2r 
 ;
 
 : ~. ( x --)
