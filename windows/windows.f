@@ -9,6 +9,8 @@ Extern: int "c" ForthBaseTimestamp( char * caddr, int flgs);
 Extern: void "c" ForthBaseNow( int * yyyymmdd, int * hhmmss, int flags);
 Extern: void "c" ForthBaseTimezone( int * bias, int * DST);
 
+37 CONSTANT UUIDlength \ includes zero terminator
+64 CONSTANT TSlength
 
 : make-UUID ( caddr -- caddr u)
 \ prepare a UUID in string format 1aa02f27-cfd3-4b13-9903-d9b524214bd8
