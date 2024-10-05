@@ -10,28 +10,21 @@
 	s" BUFFER:"		shared.map >addr 1 swap !	\ redefined in ForthBase.f
 	s" 2CONSTANT" 	shared.map >addr 2 swap !
 	s" 2VALUE" 		shared.map >addr 2 swap !
-	s" STRING"		shared.map >addr 2 swap !	\ defined in ForthBase.f
+	s" $VALUE"		shared.map >addr 2 swap !	\ defined in ForthBase.f
 	
 : SHARED
 \ prefix for VARIABLE, CONSTANT, VALUE that will be shared between source files
-	save-input								( xn...x1 n) 			\ save the state of the input buffer
-	BL parse-word shared.map >addr @	( xn...x1 n m)
-	have										( xn...x1 n m flag)
-	if							\ name is already in the dictionary - do nothing
-		>R ndrop	R> ndrop			
+	save-input								( xn...x1 n) 					\ save the state of the input buffer
+	BL parse-word 		 					( xn...x1 n c-addr u)
+	have										( xn...x1 n c-addr u flag)	\ have saves its inputs
+	if							\ name is already in the dictionary
+		shared.map >addr @ >R ndrop	\ drop the input buffer		
+		R> ndrop								\ drop the value(s) and the count of values	
 	else						\ otherwise restore the input buffer to just before the defining word
-		drop restore-input ( ior) drop		
+		2drop									\ drop the name
+		restore-input ( ior) drop		
 	then
 ;
-
-\ example
-\ source1.f
-\ 		SHARED VARIABLE x  \ create variable x the first time
-\ 
-\ source2.f
-\ 		SHARED VARIABLE x  \ do nothing the 2nd time, x is not redefined
-\ 
-
 
 \ Notes (UH 2023-06-23)
 \ Typically

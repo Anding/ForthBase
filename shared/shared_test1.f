@@ -1,3 +1,4 @@
+include "%idir%\..\forthbase.f"
 include "%idir%\..\..\forth-map\map.fs"
 include "%idir%\..\..\forth-map\map-tools.fs"
 include "%idir%\shared.f"
