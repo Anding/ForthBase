@@ -1,5 +1,4 @@
 \ FORTHbase.f
-\ Andrew Read, 9 June 2023
 
 \ documentation ****************************************************************
 
@@ -7,12 +6,21 @@ synonym :rem \
 synonym :alias synonym
 
 
-\ formatting *******************************************************************
+\ formatting and output *********************************************************
 
 : TAB
 	9 emit
 ;
 
+: (.OnOff) ( n -- caadr u)
+\ an output format
+	if s" ON" else s" OFF" then
+;
+	
+: (ud.)
+\ output an unsigned double padded to 16 characters
+	<# # # # # # # # # # # # # # # # # #>
+;
 
 \ data structures and memory ****************************************************
 
@@ -60,25 +68,35 @@ synonym :alias synonym
 	free throw
 ;
 
-
 \ strings *********************************************************************
 
 :rem $, ( caddr u --)
-\ place a counted string in the dictionary
+\ copy a string into the dictionary in counted string format
 
 :alias $! place ( caddr u addr --) 
-\ store the counted string referenced on the stack as a counted string at addr
+\ copy a string into memory at addr in counted string format
 
 :alias $@ count ( addr -- caddr u) 
-\ place a reference on the stack to the counted string at addr
+\ reference on the stack the counted string at addr
 
-: STRING create ( c-addr n <name> --) 
-\ define a constant string
-	$,
- does> ( -- c-addr n)
- 	$@
- ;
-	
+: $value create ( c-addr n <name> --) 
+\ define a string value
+	dup >R
+	$,						
+	255 R> - allot			\ reserve the full space, the string is 
+does> ( -- c-addr n)
+ 	count
+;
+
+: $-> ( c-addr n <NAME>)
+\ revise a string value created with $value
+	' >BODY				( c-addr n pfa)	\ will abort if <NAME> is not in the dictionary
+	$!												\ replace the value
+;
+
+
+
+
 
 
 

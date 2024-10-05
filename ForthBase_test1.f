@@ -6,6 +6,21 @@ include "%idir%\..\simple-tester\simple-tester.f"
 CR
 Tstart
 
+CR
+." formatting and output" CR
+
+T{ 0 (.OnOff) hashS }T s" OFF" hashS ==
+T{ 1 (.OnOff) hashS }T s" ON" hashS ==
+T{ -1 (.OnOff) hashS }T s" ON" hashS ==
+
+hex
+T{ f 0 (ud.) hashS }T s" 000000000000000F" hashS ==
+T{ 76543210 fedcba98 (ud.) hashS }T s" FEDCBA9876543210" hashS ==
+decimal
+
+CR
+." data structures and memory" CR
+
 BEGIN-ENUM
 	+ENUM Red
 	+ENUM Green
@@ -37,7 +52,13 @@ T{ buf1 @ }T 10 ==
 
 buf1 DEBUFFER
 
-s" Julius Caesar" STRING emperor
+CR ." strings" CR
+
+s" Hadrian" $value emperor
+
+T{ emperor hashS }T s" Hadrian" hashS ==
+
+s" Julius Caesar" $-> emperor
 
 T{ emperor hashS }T s" Julius Caesar" hashS ==
 
