@@ -20,6 +20,8 @@
 \ 		since 22 + 30/60 + 50/3600 = 24 - 01 -29/60 -10/3600
 \ 		note that each integer of the tripe-integer format carries the negative sign
 
+ CREATE FiniteFractions
+
 60 VALUE ffBasis	\ the basis of the finite fractions, 'D'
 
 : ~~~ ( x - x1 x2 x3)

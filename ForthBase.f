@@ -1,4 +1,4 @@
-\ FORTHbase.f
+ create FORTHbase
 
 \ documentation ****************************************************************
 
