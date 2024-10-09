@@ -1,6 +1,6 @@
 \ system dependent implemention of UHO's NEED word
 
-\ uncomment the below to use UHO's UNITS
+\ UNITS uncomment the below to use UHO's UNITS
 \ include "%idir%\units.f"
 \ ... or take the null implementation
 [defined] end-unit 0= [IF] 
@@ -10,21 +10,24 @@
 : end-unit ( unit-sys -- ) ;
 [THEN]
 
-\ use the forth-map data structure
-TEXTMACRO: libdir
- c" e:\coding" SETMACRO libdir
+\ set the  root directory of the library on the local machine
+ TEXTMACRO: libdir
+ include "%idir%\local.f"
  
+\ libname will hold the name of the library requested by NEED
+\   an alternative would be to leave ( caddr u) on the stack but possibly more robust to allocate specific storage
  create libname
  256 allot
 
 : need ( <name> --)
-	BL PARSE-WORD 	( caddr u)
+\ include the library <name> or do nothing if it has already been included
+	BL PARSE-WORD 		  ( caddr u)
 	2dup search-context ( caddr u flag)
 	if
-		2drop drop
+		drop 2drop
 	else
 		libname place
-		s" %libdir%\ForthBase\libraries\globalManifest.f" included
+		s" %libdir%\ForthBase\libraries\manifest.f" included
 	then
 ;
 		
