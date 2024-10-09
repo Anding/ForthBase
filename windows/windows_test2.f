@@ -1,7 +1,8 @@
 \ test for windows.f
 
-include "%idir%\..\FiniteFractions\FiniteFractions.f"
+include "%idir%\..\libraries\libraries.f"
 include "%idir%\windows.f"
+NEED finitefractions
 
  CR
  CR 

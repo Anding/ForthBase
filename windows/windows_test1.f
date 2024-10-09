@@ -1,6 +1,5 @@
 \ test for windows.f
 
-include "%idir%\..\FiniteFractions\FiniteFractions.f"
 include "%idir%\windows.f"
 
  CR 

@@ -1,8 +1,8 @@
-include "%idir%\..\forthbase.f"
-include "%idir%\..\..\forth-map\map.fs"
-include "%idir%\..\..\forth-map\map-tools.fs"
+\ test for shared.f
+
+include "%idir%\..\libraries\libraries.f"
 include "%idir%\shared.f"
-include "%idir%\..\..\simple-tester\simple-tester.f"
+NEED simple-tester
 
 CR
 Tstart

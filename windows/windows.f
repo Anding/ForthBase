@@ -1,5 +1,4 @@
 \ Forth utility words from the windows system
-\ requires FiniteFractions.f
 
 LIBRARY: ForthBase.dll
 
