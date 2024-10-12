@@ -1,5 +1,8 @@
 \ system dependent implemention of UHO's NEED word
 
+have libraries 0= [IF]
+create libraries
+
 \ UNITS uncomment the below to use UHO's UNITS
 \ include "%idir%\units.f"
 \ ... or take the null implementation
@@ -30,6 +33,8 @@
 		s" %libdir%\ForthBase\libraries\manifest.f" included
 	then
 ;
+
+[THEN]
 		
 		
 
