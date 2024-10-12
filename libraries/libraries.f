@@ -1,12 +1,12 @@
 \ system dependent implemention of UHO's NEED word
 
-have libraries 0= [IF]
+[DEFINED] libraries 0= [IF]
 create libraries
 
 \ UNITS uncomment the below to use UHO's UNITS
 \ include "%idir%\units.f"
 \ ... or take the null implementation
-[defined] end-unit 0= [IF] 
+[DEFINED] end-unit 0= [IF] 
 : unit ( <name> -- unit-sys ) CREATE ;
 : internal ( unit-sys1 -- unit-sys2 ) ;
 : external ( unit-sys1 -- unit-sys2 ) ;
