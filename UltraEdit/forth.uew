@@ -17,7 +17,7 @@
 < <>
 =
 >
-[IF] [ELSE] [THEN]
+[DEFINED] [ELSE] [IF] [THEN]
 ?do ?leave ?of
 again asmcode
 bank begin begincase
@@ -26,7 +26,7 @@ do
 else end-case end-code endcase endif endof exit export
 from
 get
-host host&target
+have host host&target
 idata if immediate include included interpreter
 leave loop
 next-case nextcase
