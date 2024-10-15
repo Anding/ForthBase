@@ -74,8 +74,7 @@ libname count s" ForthEFW" icompare 0= [IF]
 
 libname count s" ForthKMTronic" icompare 0= [IF]
 	create ForthKMTronic
-	include "%libdir%\KMTronic.f"
-	include "%libdir%\KMTronic_Bidmead.f"
+	include "%libdir%\ForthKMTronic\KMTronic.f"
 [THEN]
 
 libname count s" ForthXISF" icompare 0= [IF]
