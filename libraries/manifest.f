@@ -17,6 +17,11 @@ libname count s" FiniteFractions" icompare 0= [IF]
 	include "%libdir%\ForthBase\FiniteFractions\FiniteFractions.f"
 [THEN]
 
+libname count s" network" icompare 0= [IF]
+	create network
+	include "%libdir%\ForthBase\network\VFX32network.f"
+[THEN]
+
 libname count s" Serial" icompare 0= [IF]
 	create Serial
 	include "%libdir%\ForthBase\serial\VFX32serial.f"
