@@ -21,6 +21,9 @@ create libraries
 \   an alternative would be to leave ( caddr u) on the stack but possibly more robust to allocate specific storage
  create libname
  256 allot
+ 
+\ libfound is a flag
+ 0 value libfound
 
 : need ( <name> --)
 \ include the library <name> or do nothing if it has already been included
