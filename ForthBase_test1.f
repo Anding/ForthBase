@@ -53,6 +53,10 @@ T{ buf1 @ }T 10 ==
 
 buf1 DEBUFFER
 
+T{ $01234567 twist }T $67452301 ==
+T{ $0000abcf twist }T $cfab0000 ==
+T{ $0123 twist2 }T $2301 ==
+T{ $abcf twist2 }T $cfab ==
 CR ." strings" CR
 
 s" Hadrian" $value emperor

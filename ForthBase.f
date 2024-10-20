@@ -68,6 +68,24 @@ synonym :alias synonym
 	free throw
 ;
 
+: twist ( x1-x2-x3-x4 -- x4-x3-x2-x1)
+\ reverse the endian of a 4 byte integer
+	dup 255 and >r 							\ x1-x2-x3-x4 R:x4
+	8 rshift										\    x1-x2-x3 R:x4
+	dup 255 and r> 8 lshift or >r			\    x1-x2-x3 R:x4-x3
+	8 rshift										\       x1-x2 R:x4-x3
+	dup 255 and r> 8 lshift or >r			\       x1-x2 R:x4-x3-x2
+	8 rshift										\          x1 R:x4-x3-x2
+	255 and r> 8 lshift or					\ x4-x3-x2-x1
+;
+
+: twist2 ( x1-x2 -- x2-x1)
+\ reverse the endian of a 2 byte integer
+	dup 255 and >r 							\       x1-x2 R:x2
+	8 rshift										\       	  x1 R:x2
+	255 and r> 8 lshift or 					\    	  x2-x1
+;
+
 \ strings *********************************************************************
 
 :rem $, ( caddr u --)
