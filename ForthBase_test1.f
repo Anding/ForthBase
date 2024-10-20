@@ -63,5 +63,14 @@ s" Julius Caesar" $-> emperor
 
 T{ emperor hashS }T s" Julius Caesar" hashS ==
 
+CR ." secret stack" CR
+
+2 >s 1 >s 
+T{ s@ }T 1 ==
+T{ s> }T 1 ==
+T{ s> }T 2 ==
+3 4 2>s 5 6 2>s
+T{ 2s> }T 3 4 ==
+T{ 2s> }T 5 6 ==
 Tend
 CR
