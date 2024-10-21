@@ -7,14 +7,22 @@ NEED simple-tester
 
 create q1 16 allot
 create a1 $ff c, $cc c, $dd c, $ee c, $ff c,
+create a2 $ff c, $cc c, $dd c, $ef c, $ff c,
 
 CR
 Tstart
 
-T{ q1 << >> 0 }T 0 ==
-T{ q1 << $ff | >> q1 1 HashS }T a1 1 HashS ==
-T{ $ffeeddcc q1 << $ff | $  $  $ | >> q1 5 HashS }T a1 5 HashS ==
+q1 << >>
+	T{ 0 }T 0 ==
 
+q1 << $ff | >> 
+	T{ q1 1 HashS }T a1 1 HashS ==
+
+$ffeeddcc q1 << $ff | $ | $ | $ | $ | >> drop
+	T{ q1 5 HashS }T a1 5 HashS ==
+
+q1 << _ | _ | _ | _ 1+ | _  | >>
+	T{ q1 5 HashS }T a2 5 HashS ==
 
 Tend
 CR

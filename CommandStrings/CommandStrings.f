@@ -29,9 +29,8 @@
 ;
 
 : $ ( x1-x2-x3-x4 -- 00-x1-x2-x3)
-\ lay the low byte of the number on the stack into the command string
-\ increment the address pointer
-\ right shift the remaining bytes 
-	dup 255 and |
-	8 rshift
+\ extract the low byte of the number
+	dup 8 rshift
+	swap 255 and
+	
 ;
