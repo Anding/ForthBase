@@ -12,6 +12,11 @@ libname count s" Buffers" icompare 0= [IF]
 	include "%libdir%\ForthBase\buffers\buffers.f"
 [THEN]
 
+libname count s" CommandStrings" icompare 0= [IF]
+	create CommandStrings
+	include "%libdir%\ForthBase\CommandStrings\CommandStrings.f"
+[THEN]
+
 libname count s" FiniteFractions" icompare 0= [IF]
 	create FiniteFractions
 	include "%libdir%\ForthBase\FiniteFractions\FiniteFractions.f"
