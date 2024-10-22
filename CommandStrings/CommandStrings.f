@@ -34,3 +34,11 @@
 	dup 8 rshift
 	swap 255 and
 ;
+
+: ..| ( caddr u --)
+\ copy the referenced string into the command string
+	0 ?do
+		dup i + c@ |
+	loop
+	drop
+;
