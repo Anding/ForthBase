@@ -69,10 +69,14 @@ internal is
 l:
 struct
 to-callback to-do
-/C5"Locals"
-{ 
-|
-} 
+/C5"Values and locals"
+add addr
+dec
+inc
+set sub
+zero
+->
+{ | }
 /C6"VFX and specials"
 "C"
 .BADExterns
