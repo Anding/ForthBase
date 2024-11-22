@@ -6,7 +6,7 @@
 
 : << ( c-addr --)
 \ start buildings a command string. Set the address pointer to addr
-\ the stack and return stack are available witout restriction
+\ the stack and return stack are available without restriction
 	dup -> cs.addr -> cs.pointer
 ;
 
@@ -28,7 +28,7 @@
 	c@
 ;
 
-: $ ( x1-x2-x3-x4 -- x1-x2-x3-x4 x4 )
+: $ ( x1-x2-x3-x4 -- 00-x1-x2-x3 x4 )
 \ extract the low byte of an integer 
 \ right shift the remaining bytes 
 	dup 8 rshift

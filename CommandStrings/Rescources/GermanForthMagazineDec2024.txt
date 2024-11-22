@@ -1,0 +1,97 @@
+Astroimaging in FORTH: command strings for peripherals
+
+An astroimaging project is first of all a hardware integration project.  The core equipment comprises the telesope mount, the camera, filter wheel and focuser.  Typical "rigs" also include a set of remote-controlled relays to switch power on and off to devices, environmental sensors (local temperature and pressure), and a light-box (a light-box is a device that provides a uniform illumination through a diffuser and is used to calibrate the imaging train).  A full observatory set-up will also include specialist hardware for opening and closing the roof, safety sensors such a rain detector, and likely a dedicated weather station to measure wind velocity and cloud cover (at night cloud cover can be estimated from the difference between the temperature of the sky, as measaured with an IR thermometer, and the air temperature at the ground: the larger the difference, the clearer the skies)
+
+Modern cameras, filter wheels and focusers are generally USB 3.0 devices suppied with manufacturers' C/C++ API's and .DLL libraries.  In an earlier article I explained how I was developing FORTH language interfaces to these devices via their API's.  Other devices are surprisingly "old-school" with plain text or text-plus-binary command protocols transmitted over USB (virtual COM ports or HID devices) or over Ethernet via TCP/IP.
+
+FORTH provides pictorial numeric output words for printing numbers as strings.  I wanted to develop something similar for hardware command protocols.  The main objective being to make the protocol visible in the code itself.  The picture numeric output words could have been made to suit, but are not quite ideal by themselves for expressing a command format.  Firstly the strings are composed in the PAD - their longevity is system dependent and it might not be possible to handle more than one at a time. The words compose strings backwards, from the last character to the first.  HOLD and HOLDS might be better expressed with special characters to make the flow to the protocol itself truely transparent.
+
+The solution I developed is very brief
+
+0 value cs.addr
+0 value cs.pointer
+
+: << ( c-addr --)
+\ start buildings a command string. Set the address pointer to addr
+\ the stack and return stack are available without restriction
+   dup -> cs.addr -> cs.pointer
+;
+
+: >> ( -- addr u)
+\ finish the command string return its address and length
+   cs.addr cs.pointer over -
+;
+
+: | ( x --)
+\ lay byte value x into the command string and post-increment the address pointer
+   cs.pointer c! inc cs.pointer
+;
+
+: _ ( -- x)
+\ read the byte from the command string at the address pointer and leave the pointer unchanged
+   cs.pointer c@
+;
+
+: $ ( x1-x2-x3-x4 -- 00-x1-x2-x3 x4 )
+\ extract the low byte of an integer 
+\ right shift the remaining bytes 
+   dup 8 rshift swap 255 and
+;
+
+: ..| ( caddr u --)
+\ copy the referenced string into the command string
+   0 ?do
+      dup i + c@ |
+   loop drop
+;
+
+Some examples of how they may be used (VFX Forth)
+
+create q1 16 allot
+
+q1 << $ff | >>             
+\ $ff
+
+$ffeeddcc q1 << $ff | $ | $ | $ | $ | drop >>
+\ $ff $cc $dd $ee $ff
+
+q1 << _ | _ | _ | _ 1+ | _ | >>
+\ $ff $cc $dd $ed $ff
+
+q1 << s" x:25" ..| >>
+\ 'x' ':' '2' '5'
+
+q1 << 'x' | ':' | 25 (.) ..| >>
+\ 'x' ':' '2' '5'
+
+Judge for yourself.  Can you reverse engineer the following protocols at a glance?  Please give me your feedback.
+
+: switch-relay ( f r --)
+\ KMTronic USB relay box
+\ f = -1 on; 0 off
+\ r = relay number
+   KMTronic.command << 0xff | ( r) | ( f) if 1 else 0 then | >>
+;
+
+: lightbox-intensity ( n --)  
+\ Pegausus Astro lightbox
+\ n = the inverse intensity in range 20-255
+   Pegasus.command << 'L' | ':' | (.) ..| 0x0a | >>
+;
+
+: focuser-move ( n --)
+\ Takahashi CCA-250 focuser
+\ n = focuser position
+   twist \ reverse the endian of a 4 byte integer
+   Takahasi.command << 0 | 5 | 9 | $ | $ | $ | $ nip | 0 | >>
+;
+
+: seasons-greetings ( --)
+ Festive.command << $4D | $65 | $72 | $72 | $79 | $20 | $58 | $6D | $61 | $73 | >>
+;
+
+I look forward to hearing from you!
+Andrew Read
+andrew81244@outlook.com
+
+

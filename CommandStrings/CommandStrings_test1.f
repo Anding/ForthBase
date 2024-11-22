@@ -29,7 +29,7 @@ T{
 HashS }T a1 5 HashS ==
 
 T{
-	q1 << _ | _ | _ | _ 1+ | _  | >>
+	q1 << _ | _ | _ | _ 1+ | _ | >>
 
 HashS }T a2 5 HashS ==
 
