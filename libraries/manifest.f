@@ -97,6 +97,16 @@ libname count s" ForthXML" icompare 0= [IF]
 	include "%libdir%\ForthXML\xml_maptools.f"
 [THEN]
 
+libname count s" ForthPegasusAstro" icompare 0= [IF]
+	create ForthPegasusAstro
+	include "%libdir%\ForthPegasusAstro\PegasusAstro.f"
+[THEN]
+
+libname count s" ImageAnalysis" icompare 0= [IF]
+	create ImageAnalysis
+	include "%libdir%\ImageAnalysis\ImageAnalysis.f"
+[THEN]
+
 libname count s" simple-tester" icompare 0= [IF]
 	create simple-tester
 	include "%libdir%\simple-tester\simple-tester.f"
