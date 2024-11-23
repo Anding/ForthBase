@@ -36,12 +36,12 @@ synonym :alias synonym
 	DOES> ( n -- c addr u)
  		( n pfa) swap 0 ?do ( pfa) 
  			dup c@ + 1+ 
- 			4 / 1+ 4 * 	\ since VFX aligns the dictionary on longwords
+ 			4 /mod swap if 1+ then 4 * 	\ since VFX aligns the dictionary on longwords
  		loop ( addr')
  		count
 ;
 	
-: +" '"' parse $,	;			\ lay a counted string in the dictionary
+: +" '"' parse $,	;					\ lay a counted string in the dictionary
 
 : END-ENUMS ;
 
