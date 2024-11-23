@@ -43,5 +43,10 @@ T{
 	
 HashS }T a3 4 HashS ==
 
+T{
+	q1 << $4D | $65 | $72 dup |  | $79 | $10 2* | $58 | $92 not $ff and | $61 | $73 | >> 
+	
+HashS }T s" Merry Xmas" HashS ==
+
 Tend
 CR

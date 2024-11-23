@@ -87,7 +87,7 @@ Judge for yourself.  Can you reverse engineer the following protocols at a glanc
 ;
 
 : seasons-greetings ( --)
- Festive.command << $4D | $65 | $72 | $72 | $79 | $20 | $58 | $6D | $61 | $73 | >>
+ Festive.command << $4D | $65 | $72 dup |  | $79 | $10 2* | $58 | $92 not $ff and | $61 | $73 | >>
 ;
 
 I look forward to hearing from you!
