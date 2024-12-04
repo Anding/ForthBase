@@ -10,6 +10,7 @@ libname count s" ForthBase" icompare 0= [IF]
 libname count s" Buffers" icompare 0= [IF]
 	create Buffers
 	include "%libdir%\ForthBase\buffers\buffers.f"
+	include "%libdir%\ForthBase\buffers\buffersTools.f"	
 [THEN]
 
 libname count s" CommandStrings" icompare 0= [IF]

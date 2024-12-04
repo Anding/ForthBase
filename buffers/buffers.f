@@ -1,10 +1,13 @@
 \ a descriptor based approach to buffers
 
+4 CONSTANT BUFFER_USER_SPACE
+
 \ descriptor data structure for an buffer
 BEGIN-STRUCTURE	BUFFER_DESCRIPTOR
-	4 	+FIELD	BUFFER_SIZE				\ size of the buffer in bytes
-	4 	+FIELD 	BUFFER_POINTER			\ pointer to the current write location
-	0 	+FIELD 	BUFFER_ADDR				\ the buffer itself immediately follows the descriptor
+	BUFFER_USER_SPACE	+FIELD BUFFER_USER	\ bespoke use for specialized buffers
+	4 	+FIELD	BUFFER_SIZE						\ size of the buffer in bytes
+	4 	+FIELD 	BUFFER_POINTER					\ pointer to the current write location
+	0 	+FIELD 	BUFFER_ADDR						\ the buffer itself immediately follows the descriptor
 END-STRUCTURE
 
 : reset-buffer ( buf --)
