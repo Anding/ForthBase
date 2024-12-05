@@ -9,12 +9,18 @@ END-STRUCTURE
 	buffer-to-string
 ;
 
+: buffer-drive-to-string
+\ provide the drive part of the buffer in string format
+\  single drive letter filepath "e:\" is assumed
+	BUFFER_ADDR 3
+;
+
 : buffer-dir-to-string ( buf -- caddr u)
 \ provide the directory part of the buffer in string format
-\ 	include final delimiter
+\ 	exclude the drive part, include final delimiter, 
 	>R
-	R@ BUFFER_ADDR
-	R> BUFFER_LEN_DIR @
+	R@ BUFFER_ADDR 3 +
+	R> BUFFER_LEN_DIR @ 3 -
 ;
 
 : buffer-filename-to-string ( buf -- caddr u)
@@ -24,7 +30,7 @@ END-STRUCTURE
 	R> BUFFER_POINTER @ over -					( caddr len)
 ;
 
-: buffer-set-filepath-division ( buf --)
+: buffer-punctuate-filepath ( buf --)
 \ confirm that the directory part of the filepath, including final delimiter is written
 	>R 
 	R@ BUFFER_POINTER @ R@ BUFFER_ADDR -
