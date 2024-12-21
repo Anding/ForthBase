@@ -12,6 +12,4 @@ include C:\MPE\VfxForth\Lib\Win32\Genio\SocketIo.fth
 	256 * R> +
 ;
 
-CR
 initwinsock
-CR
