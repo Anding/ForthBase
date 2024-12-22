@@ -74,7 +74,7 @@
 ;
 
 : >number~~~ ( caddr u -- x y z)
-\ split a three part string of the form sXX:YY:ZZ into 3 integers
+\ convert a three part string of the form sXX:YY:ZZ into a finite fraction in 3 integer format
 \ the sign s is applied to each of x, y and z
 \ XX, YY, ZZ can be any number of digits
 \ ':' can be any non-digit character
@@ -90,6 +90,11 @@
 	nip swap over * >R
 	nip swap over * >R
 	nip * R> R>
+;
+
+: >number~ ( caddr u - x)
+\ convert a three part string of the form sXX:YY:ZZ into a finite fraction in single integer format
+	 >number~~~ ~
 ;
 
 : ~~~. ( x1 x2 x3 --)
