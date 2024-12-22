@@ -39,23 +39,6 @@
 	+						( x3+D*{x2+D*x1} )
 ;
 
-: .2r ( n --)
-\ print a number with at least two digits padded with a leading zero
-	<# S>D ( double number) # #s #> type space
-	\ note S>D is required to correctly convert negative single numbers to doubles
-;
-
-: ~~~. ( x1 x2 x3 --)
-\ print a triple integer format finite fraction in the order that it would have been keyed
-	swap rot		( x3 x2 x1)
-	.2r .2r .2r 
-;
-
-: ~. ( x --)
-\ print a single integer format finite fraction in triple integer format
-	~~~ ~~~.
-;
-
 : ~~~$ ( x1 x2 x3 -- c-addr u)
 \ format a triple integer format finite fraction as a string x1cx2cx3 where c is ffSeparator
 	<# 				\ proceeds from the rightmost character in the string
@@ -121,44 +104,27 @@
 	~~~ ~~~fp
 ;
 
-\ debug - these routines need to be reviewed and debugged or deleted
-
-: ~~~f$ ( x1 x2 x3 -- c-addr u)			\ debug - assumes base 60
-\ format format a triple integer format finite fraction as a fixed point string iii.dddd
-	swap ffBasis * + 100 *	\ documented in finite-fractions.xlxs
-	over 0< 2* 1+ 18 * +		\ for rounding - equivalent to int(x + 0.5)
-	36 /							( iii ddd)
-	<#
-	abs 0 # # # # 2drop		\ 4 d.p.
-	'.' HOLD
-	dup abs 0 #s
-	rot sign
-	#>
+: fp~ ( f --- x)
+\ convert a floating point number to single integer finite fraction format
+	ffBasis S>F fdup f* f*
+	FR>S	\ float to number with rounding preferred to maintain precision
 ;
 
-: ~f$ ( x -- c-addr u)
-\ format format a single integer format finite fraction as a fixed point string iii.dddd
-	~~~ ~~~f$
+: fp~~~ ( f --- x1 x2 x3)
+\ convert a floating point number to triple integer finite fraction format
+	fp~ ~~~
 ;
 
-: f$~ ( c-addr u - x)						\ debug - assumes base 60 
-\ parse a fixed point decimal string iii.dddd into a finite fraction in single integer format
-	'.' csplit ( raddr ru laddr lu)	\ r = fractional part with dot l = integer part
-	isinteger? 0= if 0 then >R
-	dup if						\ ru <> 0 there was a decimal point
-		swap 1+ swap 1-		\ skip the decimal point
-		isinteger? 0= if 0 then
-	then							\ if no decimal point 0 is on stack
-		36 *						\ documented in finite-fractions.xlxs
-		R@ 0< 2* 1+	*			\ fractional part takes the sign of the integer part		
-		R@ 0< 2* 1+ 50 * +	\ for rounding - equivalent to int(x + 0.5)
-		100 /
-		R> 3600 * +
+: ~~~. ( x1 x2 x3 --)
+\ print a triple integer format finite fraction in the order that it would have been keyed
+	ff1separator ff2separator ffForcePlus									\ save current
+	BL -> ff1separator BL -> ff2separator 0 -> ffForcePlus
+	~~~$ type
+	->  ffForcePlus -> ff2separator -> ff1separator						\ restore
 ;
 
-: f$~~~ ( c-addr u - x1 x2 x3)
-\ parse a fixed point decimal string iii.dddd  into a finite fraction in triple integer format
-	f$~ ~~~
+: ~. ( x --)
+\ print a single integer format finite fraction in triple integer format
+	~~~ ~~~.
 ;
-
 
