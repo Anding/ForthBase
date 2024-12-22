@@ -20,9 +20,10 @@
 \ 		since 22 + 30/60 + 50/3600 = 24 - 01 -29/60 -10/3600
 \ 		note that each integer of the tripe-integer format carries the negative sign
 
-60 VALUE ffBasis	\ the basis of the finite fractions, 'D'
-':' VALUE ffSeparator
-0 VALUE ffForcePlus
+ 60 VALUE ffBasis			\ the basis of the finite fractions, 'D'
+':' VALUE ff1separator 	\ for string conversion, e.g. 23:10:00
+':' VALUE ff2separator 	\ e.g. 130*10:00 for 10Micron mount commands
+  0 VALUE ffForcePlus   \ for string conversion, e.g. +179:59:59
 
 : ~~~ ( x - x1 x2 x3)
 \ convert a finite fraction from single to triple integer format
@@ -41,6 +42,7 @@
 : .2r ( n --)
 \ print a number with at least two digits padded with a leading zero
 	<# S>D ( double number) # #s #> type space
+	\ note S>D is required to correctly convert negative single numbers to doubles
 ;
 
 : ~~~. ( x1 x2 x3 --)
@@ -58,9 +60,9 @@
 \ format a triple integer format finite fraction as a string x1cx2cx3 where c is ffSeparator
 	<# 				\ proceeds from the rightmost character in the string
 	abs 0 # #s 2drop	\ numeric output works with double numbers
-	ffSeparator HOLD
+	ff1separator HOLD
 	abs 0 # #s 2drop
-	ffSeparator HOLD
+	ff2separator HOLD
 	dup >R 
 	abs 0 # #s
 	R> 0 < if '-' HOLD else ffForcePlus if '+' HOLD then then
@@ -107,8 +109,19 @@
 	nip * R> R>
 ;
 
+: ~~~fp ( x1 x2 x3 -- f)
+\ convert a triple integer format finite fraction into a floating point number on the floating point stack
+	S>F ffBasis S>F f/
+	S>F f+ ffBasis S>F f/
+	S>F f+
+;
 
-\ debug - these routines need to be reviewed and debugged
+: ~fp ( x --- f)
+\ convert a single integer format finite fraction into a floating point number on the floating point stack
+	~~~ ~~~fp
+;
+
+\ debug - these routines need to be reviewed and debugged or deleted
 
 : ~~~f$ ( x1 x2 x3 -- c-addr u)			\ debug - assumes base 60
 \ format format a triple integer format finite fraction as a fixed point string iii.dddd
