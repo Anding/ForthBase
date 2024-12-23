@@ -22,6 +22,7 @@ libname count s" FiniteFractions" icompare 0= [IF]
 	create FiniteFractions
 	include "%libdir%\ForthBase\FiniteFractions\FiniteFractions.f"
 	include "%libdir%\ForthBase\FiniteFractions\FiniteFractionsTypes.f"	
+	include "%libdir%\ForthBase\FiniteFractions\FiniteFractionsFloatingPoint.f"	
 [THEN]
 
 libname count s" network" icompare 0= [IF]
