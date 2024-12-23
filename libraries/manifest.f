@@ -119,6 +119,8 @@ libname count s" Forth10Micron" icompare 0= [IF]
 	include "%libdir%\Forth10Micron\10Micron_SDK.f"
 	include "%libdir%\Forth10Micron\10Micron_SDK_extend.f"
 	include "%libdir%\Forth10Micron\10Micron_SDK_commands.f"
+	include "%libdir%\Forth10Micron\ForthTelescopeMount.f"
+	include "%libdir%\Forth10Micron\ForthTelescopeMountMaps.f"
 [THEN]
 		
 \ as presently coded there is no error message or warning if a requested library cannot be found
