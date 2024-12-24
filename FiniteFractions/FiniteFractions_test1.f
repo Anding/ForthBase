@@ -11,9 +11,9 @@ T{ -7654 ~~~ }T -2 -7 -34 ==
 T{ 2 7 34 ~ }T 7654 ==
 T{ -2 -7 -34 ~ }T -7654 ==
 T{ 7654 ~$ hashS }T s" 02:07:34" hashS ==
--1 -> ffForcePlus
-T{ 7654 ~$ hashS }T s" +02:07:34" hashS ==
 T{ -7654 ~$ hashS }T s" -02:07:34" hashS ==
+T{ 4032 '*' ':' -1 ~custom$ hashS }T s" +01*07:12" hashS ==
+T{ -4032 '*' ':' 0 ~custom$ hashS }T s" -01*07:12" hashS ==
 T{ s" 20:58:59" >number~~~ }T 20 58 59 ==
 T{ s" 20:58:59.99" >number~~~ }T 20 58 59 ==
 T{ s" -181:58:59" >number~~~ }T -181 -58 -59 ==

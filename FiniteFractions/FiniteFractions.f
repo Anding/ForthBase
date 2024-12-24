@@ -40,7 +40,7 @@
 ;
 
 : ~~~$ ( x1 x2 x3 -- c-addr u)
-\ format a triple integer format finite fraction as a string x1cx2cx3 where c is ffSeparator
+\ format a triple integer format finite fraction as a string x1cx2cx3
 	<# 				\ proceeds from the rightmost character in the string
 	abs 0 # #s 2drop	\ numeric output works with double numbers
 	ff1separator HOLD
@@ -53,8 +53,24 @@
 ;
 
 : ~$ ( x -- c-addr u)
-\ format a single integer format finite fraction as a string x1cx2cx3 where c is specified
+\ format a single integer format finite fraction as a string x1cx2cx3
 	~~~ ~~~$
+;
+
+: ~custom$ ( x c1 c2 fp -- c-addr u)
+\ format a single integer format finite fraction as a string x1cx2cx3
+	ff1separator >R ff2separator >R ffForcePlus >R									\ save current
+	-> ffForcePlus -> ff2separator -> ff1separator 
+	~$
+	R> -> ffForcePlus R> -> ff2separator R> -> ff1separator 						\ restore
+;
+
+: ~~~custom$ ( x c1 c2 fp -- c-addr u)
+\ format a single integer format finite fraction as a string x1cx2cx3
+	ff1separator >R ff2separator >R ffForcePlus >R									\ save current
+	-> ffForcePlus -> ff2separator -> ff1separator 
+	~~~$
+	R> -> ffForcePlus R> -> ff2separator R> -> ff1separator 						\ restore
 ;
 
 : check-sign ( caddr u -- caddr u +/-1)
