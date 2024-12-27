@@ -48,5 +48,9 @@ T{
 	
 HashS }T s" Merry Xmas" HashS ==
 
+T{
+	65535 q1 << .| >>
+HashS }T s" 65535" HashS ==
+
 Tend
 CR

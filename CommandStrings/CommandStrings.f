@@ -42,3 +42,8 @@
 	loop
 	drop
 ;
+
+: .| ( n --)
+\ type the number n to the command string
+	(.) ..|
+;
