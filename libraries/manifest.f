@@ -123,6 +123,11 @@ libname count s" Forth10Micron" icompare 0= [IF]
 	include "%libdir%\Forth10Micron\ForthTelescopeMount.f"
 	include "%libdir%\Forth10Micron\ForthTelescopeMountMaps.f"
 [THEN]
+
+libname count s" ForthVT100" icompare 0= [IF]
+	create ForthVT100
+	include "%libdir%\ForthVT100\ForthVT100.f"
+[THEN]
 		
 \ as presently coded there is no error message or warning if a requested library cannot be found
 
