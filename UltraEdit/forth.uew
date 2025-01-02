@@ -40,11 +40,11 @@ while
 /C2"Defining words"
 2constant 2value 2variable
 $value
-:
+: :noname
 ; ;code
 buffer:
 constant create cvariable
-debuffer defer does>
+debuffer defer defer! does>
 interp>
 user
 value variable
