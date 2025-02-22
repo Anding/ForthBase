@@ -131,3 +131,10 @@ END-STRUCTURE
 	REPEAT
 	nip -1
 ;
+
+: go-on ( current -- onward TRUE | current FALSE)
+	\ tree traversal
+	go-down IF TRUE EXIT THEN
+	go-next IF TRUE EXIT THEN
+	go-back-up 
+;
