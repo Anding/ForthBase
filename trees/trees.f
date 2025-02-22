@@ -1,6 +1,6 @@
-4096 CONSTANT TREE_SIZE
+\ simple binary trees based on descriptors
 
-\ descriptor for a Warnier-Orr tree
+32 value NODE_PAYLOAD_SIZE
 
 BEGIN-STRUCTURE TREE_DESCRIPTOR
 	4 +FIELD TREE_SIZE				\ size of the tree in bytes
@@ -13,7 +13,8 @@ BEGIN-STRUCTURE NODE_DESCRIPTOR
 	4 +FIELD DOWN_NODE
 	4 +FIELD BACK_NODE
 	4 +FIELD NEXT_NODE
- 256 +FIELD NODE_PAYLOAD			\ typically a counted string
+ 	NODE_PAYLOAD_SIZE 
+ 	  +FIELD NODE_PAYLOAD			\ typically a counted string
 END-STRUCTURE
 
 : tree_used ( tree -- x)
@@ -121,12 +122,12 @@ END-STRUCTURE
 	dup DOWN_NODE @ test-node 
 ;
 
-: back-up ( current -- up TRUE | current FALSE)
+: go-back-up ( current -- up TRUE | current FALSE)
 	dup BEGIN
 		go-up ( up TRUE | current FALSE)
 	0= WHILE
 		go-back ( back TRUE | current FALSE)
 		0= IF drop 0 EXIT THEN					\ reached a dead end!
 	REPEAT
-	
+	nip -1
 ;
