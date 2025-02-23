@@ -23,20 +23,20 @@ T{ nod1 tre1 new-next-node constant nod2 }T ==
 \  |
 \ nod2
 
-T{ nod1 go-next }T -1 nod2 ==
-T{ nod2 go-back }T -1 nod1 ==
-T{ nod1 go-back }T  0 nod1 ==
-T{ nod2 go-next }T  0 nod2 ==
+T{ nod1 go-next }T GO_NEXT nod2 ==
+T{ nod2 go-back }T GO_BACK nod1 ==
+T{ nod1 go-back }T NO_MOVE nod1 ==
+T{ nod2 go-next }T NO_MOVE nod2 ==
 
 T{ nod2 tre1 new-down-node constant nod3 }T ==
 \ nod1
 \  |
 \ nod2 -- nod3
 
-T{ nod2 go-down }T -1 nod3 ==
-T{ nod3 go-up   }T -1 nod2 ==
-T{ nod3 go-back-up }T -1 nod2 ==
-T{ nod1 go-back-up }T 0 nod1 ==
+T{ nod2 go-down }T GO_DOWN nod3 ==
+T{ nod3 go-up   }T GO_UP nod2 ==
+T{ nod3 go-back-up }T GO_UP nod2 ==
+T{ nod1 go-back-up }T NO_MOVE nod1 ==
 
 T{ nod3 tre1 new-next-node constant nod4 }T ==
 \ nod1
@@ -54,7 +54,7 @@ T{ nod4 tre1 new-next-node constant nod5 }T ==
 \          |
 \         nod5
 
-T{ nod5 go-back-up }T -1 nod2 ==
+T{ nod5 go-back-up }T GO_UP nod2 ==
 
 Tend
 CR

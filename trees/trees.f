@@ -1,5 +1,7 @@
 \ simple binary trees based on descriptors
 
+NEED ForthBase
+
 32 value NODE_PAYLOAD_SIZE
 
 BEGIN-STRUCTURE TREE_DESCRIPTOR
@@ -99,40 +101,48 @@ END-STRUCTURE
 	UP_NODE !
 ;
 
-: test-node ( node1 node2 -- node2 TRUE | node1 FALSE)
+BEGIN-ENUM
+	+ENUM NO_MOVE
+	+ENUM GO_NEXT
+	+ENUM GO_BACK
+	+ENUM GO_UP
+	+ENUM GO_DOWN
+END-ENUM
+
+: test-node ( node1 node2 movement -- node2 movement | node1 NO_MOVE)
 	\ test the validity (non-zero) of node2 as a step from node1
-	dup IF nip TRUE ELSE drop FALSE THEN
+	over IF rot drop ELSE 2drop NO_MOVE THEN
 ;
 
-: go-next ( current -- next TRUE | current FALSE)
+: go-next ( current -- next GO_NEXT | current NO_MOVE)
 	\ take the next field of the current node and return TRUE
 	\ if there is no next node return the current node and FALSE
-	dup NEXT_NODE @ test-node 
+	dup NEXT_NODE @ GO_NEXT test-node 
 ;
 
-: go-back ( current -- back TRUE | current FALSE)
-	dup BACK_NODE @ test-node 
+: go-back ( current -- back GO_BACK | current NO_MOVE)
+	dup BACK_NODE @ GO_BACK test-node 
 ;
 
-: go-up ( current -- up TRUE | current FALSE)
-	dup UP_NODE @ test-node 
+: go-up ( current -- up GO_UP | current NO_MOVE)
+	dup UP_NODE @ GO_UP test-node 
 ;
 
-: go-down ( current -- down TRUE | current FALSE)
-	dup DOWN_NODE @ test-node 
+: go-down ( current -- down GO_DOWN | current NO_MOVE)
+	dup DOWN_NODE @ GO_DOWN test-node 
 ;
 
-: go-back-up ( current -- up TRUE | current FALSE)
+: go-back-up ( current -- up MOVEMENT | current NO_MOVE)
 	dup BEGIN
-		go-up ( up TRUE | current FALSE)
+		go-up ( up GO_UP | current FALSE)
 	0= WHILE
-		go-back ( back TRUE | current FALSE)
-		0= IF drop 0 EXIT THEN					\ reached a dead end!
+		go-back ( back GO_BACK | current FALSE)
+		0= IF drop NO_MOVE EXIT THEN					\ reached a dead end!
 	REPEAT
-	nip -1
+	nip GO_UP
 ;
 
-: go-on ( current -- onward TRUE | current FALSE)
+: go-on ( current -- onward MOVEMENT | current NO_MOVE)
 	\ tree traversal
 	go-down IF TRUE EXIT THEN
 	go-next IF TRUE EXIT THEN
