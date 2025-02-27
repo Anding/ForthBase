@@ -109,26 +109,59 @@ BEGIN-ENUM
 	+ENUM GO_DOWN
 END-ENUM
 
-: test-node ( node1 node2 movement -- node2 movement | node1 NO_MOVE)
-	\ test the validity (non-zero) of node2 as a step from node1
-	over IF rot drop ELSE 2drop NO_MOVE THEN
+BEGIN-ENUMS MOVEMENT_CODES
+	+" NO_MOVE"
+	+" GO_NEXT"
+	+" GO_BACK"
+	+" GO_UP"
+	+" GO_DOWN"
+END-ENUMS	
+
+DEFER do-after-move ( node1 node2 MOVEMENT -- node2 MOVEMENT | node1 MOVEMENT FALSE)
+
+: do-nothing ;
+
+: explain-move ( node1 node2 MOVEMENT -- node2 MOVEMENT | node1 MOVEMENT FALSE)
+	CR
+	?dup 0= IF 
+		2dup 
+		." FAILED TO " 
+		MOVEMENT_CODES type
+		." . Now at node "
+		node@ .
+		0
+	ELSE
+		2dup
+				MOVEMENT_CODES type
+		." . Now at node "
+		node@ .
+	THEN
 ;
 
-: go-next ( current -- next GO_NEXT | current NO_MOVE)
+ASSIGN do-nothing TO-DO do-after-move
+
+: test-node ( node1 node2 MOVEMENT -- node2 MOVEMENT | node1 MOVEMENT FALSE)
+	\ test the validity (non-zero) of node2 as a step from node1
+	over IF rot drop ELSE nip FALSE THEN
+	\ call a user definable function
+	do-after-move
+;
+
+: go-next ( current -- next GO_NEXT | current GO_NEXT FALSE)
 	\ take the next field of the current node and return TRUE
 	\ if there is no next node return the current node and FALSE
 	dup NEXT_NODE @ GO_NEXT test-node 
 ;
 
-: go-back ( current -- back GO_BACK | current NO_MOVE)
+: go-back ( current -- back GO_BACK | current GO_BACK FALSE)
 	dup BACK_NODE @ GO_BACK test-node 
 ;
 
-: go-up ( current -- up GO_UP | current NO_MOVE)
+: go-up ( current -- up GO_UP | current GO_UP FALSE)
 	dup UP_NODE @ GO_UP test-node 
 ;
 
-: go-down ( current -- down GO_DOWN | current NO_MOVE)
+: go-down ( current -- down GO_DOWN | current GO_DOWN FALSE)
 	dup DOWN_NODE @ GO_DOWN test-node 
 ;
 
@@ -142,9 +175,37 @@ END-ENUM
 	nip GO_UP
 ;
 
-: go-on ( current -- onward MOVEMENT | current NO_MOVE)
-	\ tree traversal
-	go-down IF TRUE EXIT THEN
-	go-next IF TRUE EXIT THEN
-	go-back-up 
+: go-on ( next MOVEMENT | current MOVEMENT FALSE -- next MOVEMENT | current MOVEMENT FALSE )
+	?dup IF
+		\ successful movement
+		CASE
+			GO_DOWN OF go-down ENDOF
+			GO_NEXT OF go-down ENDOF
+			GO_BACK OF go-up ENDOF
+			GO_UP OF go-next ENDOF
+		ENDCASE
+	ELSE
+		\ no move
+		CASE
+			GO_DOWN OF go-next ENDOF
+			GO_NEXT OF go-up ENDOF
+			GO_BACK OF go-up ENDOF
+			GO_UP OF go-back ENDOF
+		ENDCASE
+	THEN
 ;
+
+: traverse ( tree)
+	TREE_ADDR dup >R GO_DOWN  
+	BEGIN
+		go-on
+	?dup 0= IF 
+		( current MOVEMENT )
+		dup GO_UP = IF
+				over R@ = IF
+				R> drop 2drop exit
+		THEN THEN 0 THEN
+	key drop
+	AGAIN
+;
+		 
