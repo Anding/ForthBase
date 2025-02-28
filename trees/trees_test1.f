@@ -23,23 +23,23 @@ T{ nod1 tre1 new-next-node constant nod2 }T ==
 \  |
 \ nod2
 
-T{ nod1 go-next }T GO_NEXT nod2 ==
-T{ nod2 go-back }T GO_BACK nod1 ==
-T{ nod1 go-back }T GO_BACK FALSE nod1 ==
-T{ nod2 go-next }T GO_NEXT FALSE nod2 ==
+T{ nod1 go-next }T nod2 GO_NEXT TRUE ==
+T{ nod2 go-back }T nod1 GO_BACK TRUE ==
+T{ nod1 go-back }T nod1 GO_BACK FALSE ==
+T{ nod2 go-next }T nod2 GO_NEXT FALSE ==
 
 T{ nod2 tre1 new-down-node constant nod3 }T ==
 \ nod1
 \  |
 \ nod2 -- nod3
 
-T{ nod2 go-down }T GO_DOWN nod3 ==
-T{ nod3 go-up   }T GO_UP nod2 ==
+T{ nod2 go-down }T nod3 GO_DOWN TRUE ==
+T{ nod3 go-up   }T nod2 GO_UP TRUE ==
 
 T{ nod3 tre1 new-next-node constant nod4 }T ==
 \ nod1
 \  |
-\ nod2 -- nod3
+\ nod2 -- nod3T
 \          |
 \         nod4
 
@@ -69,5 +69,9 @@ T{ 6 nod6 node! }T ==
 Tend
 
 ASSIGN explain-move TO-DO do-after-move
+
+CR
+
+tre1 traverse
 
 CR

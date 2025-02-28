@@ -117,66 +117,54 @@ BEGIN-ENUMS MOVEMENT_CODES
 	+" GO_DOWN"
 END-ENUMS	
 
-DEFER do-after-move ( node1 node2 MOVEMENT -- node2 MOVEMENT | node1 MOVEMENT FALSE)
+DEFER do-after-move ( node2 MOVEMENT TRUE | node1 MOVEMENT FALSE -- [x0...xn])
 
-: do-nothing ;
-
-: explain-move ( node1 node2 MOVEMENT -- node2 MOVEMENT | node1 MOVEMENT FALSE)
-	CR
-	?dup 0= IF 
-		2dup 
-		." FAILED TO " 
-		MOVEMENT_CODES type
-		." . Now at node "
-		node@ .
-		0
+: do-nothing ( node2 MOVEMENT TRUE | node1 MOVEMENT FALSE -- ) 
+	3drop
+;
+	
+	
+: explain-move ( node2 MOVEMENT TRUE | node1 MOVEMENT FALSE -- )
+	0= IF 
+		." FAILED:" 
+		MOVEMENT_CODES type BL emit
+		drop
 	ELSE
-		2dup
-				MOVEMENT_CODES type
-		." . Now at node "
+		MOVEMENT_CODES type
+		CR ." Node "
 		node@ .
 	THEN
 ;
 
 ASSIGN do-nothing TO-DO do-after-move
 
-: test-node ( node1 node2 MOVEMENT -- node2 MOVEMENT | node1 MOVEMENT FALSE)
+: test-node ( node1 node2 MOVEMENT -- node2 MOVEMENT TRUE | node1 MOVEMENT FALSE)
 	\ test the validity (non-zero) of node2 as a step from node1
-	over IF rot drop ELSE nip FALSE THEN
+	over IF rot drop TRUE ELSE nip FALSE THEN
 	\ call a user definable function
-	do-after-move
+	3dup >R >R >R do-after-move R> R> R>
 ;
 
-: go-next ( current -- next GO_NEXT | current GO_NEXT FALSE)
+: go-next ( current -- next GO_NEXT TRUE | current GO_NEXT FALSE)
 	\ take the next field of the current node and return TRUE
 	\ if there is no next node return the current node and FALSE
 	dup NEXT_NODE @ GO_NEXT test-node 
 ;
 
-: go-back ( current -- back GO_BACK | current GO_BACK FALSE)
+: go-back ( current -- back GO_BACK TRUE | current GO_BACK FALSE)
 	dup BACK_NODE @ GO_BACK test-node 
 ;
 
-: go-up ( current -- up GO_UP | current GO_UP FALSE)
+: go-up ( current -- up GO_UP TRUE | current GO_UP FALSE)
 	dup UP_NODE @ GO_UP test-node 
 ;
 
-: go-down ( current -- down GO_DOWN | current GO_DOWN FALSE)
+: go-down ( current -- down GO_DOWN TRUE | current GO_DOWN FALSE)
 	dup DOWN_NODE @ GO_DOWN test-node 
 ;
 
-: go-back-up ( current -- up MOVEMENT | current NO_MOVE)
-	dup BEGIN
-		go-up ( up GO_UP | current FALSE)
-	0= WHILE
-		go-back ( back GO_BACK | current FALSE)
-		0= IF drop NO_MOVE EXIT THEN					\ reached a dead end!
-	REPEAT
-	nip GO_UP
-;
-
-: go-on ( next MOVEMENT | current MOVEMENT FALSE -- next MOVEMENT | current MOVEMENT FALSE )
-	?dup IF
+: go-on ( next MOVEMENT TRUE | current MOVEMENT FALSE -- next MOVEMENT TRUE | current MOVEMENT FALSE )
+	IF
 		\ successful movement
 		CASE
 			GO_DOWN OF go-down ENDOF
@@ -196,16 +184,15 @@ ASSIGN do-nothing TO-DO do-after-move
 ;
 
 : traverse ( tree)
-	TREE_ADDR dup >R GO_DOWN  
-	BEGIN
-		go-on
-	?dup 0= IF 
-		( current MOVEMENT )
-		dup GO_UP = IF
-				over R@ = IF
-				R> drop 2drop exit
-		THEN THEN 0 THEN
-	key drop
+	TREE_ADDR dup >R GO_DOWN TRUE   
+	BEGIN ( current MOVEMENT TRUE|FALSE)
+		go-on ( current MOVEMENT TRUE|FALSE)
+		dup 0= IF -rot 2dup
+			GO_UP = 
+			swap R@ = 
+			AND IF R> drop 3drop exit THEN 
+			rot
+		THEN
 	AGAIN
 ;
 		 
