@@ -43,9 +43,9 @@
 \ format a triple integer format finite fraction as a string x1cx2cx3
 	<# 				\ proceeds from the rightmost character in the string
 	abs 0 # #s 2drop	\ numeric output works with double numbers
-	ff1separator HOLD
-	abs 0 # #s 2drop
 	ff2separator HOLD
+	abs 0 # #s 2drop
+	ff1separator HOLD
 	dup >R 
 	abs 0 # #s
 	R> 0 < if '-' HOLD else ffForcePlus if '+' HOLD then then
