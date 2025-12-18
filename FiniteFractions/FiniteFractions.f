@@ -115,10 +115,7 @@
 
 : ~~~. ( x1 x2 x3 --)
 \ print a triple integer format finite fraction in the order that it would have been keyed
-	ff1separator ff2separator ffForcePlus									\ save current
-	BL -> ff1separator BL -> ff2separator 0 -> ffForcePlus
-	~~~$ type
-	->  ffForcePlus -> ff2separator -> ff1separator						\ restore
+ rot . swap . .
 ;
 
 : ~. ( x --)

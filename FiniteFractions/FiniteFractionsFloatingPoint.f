@@ -1,3 +1,7 @@
+\ override VFX default that specifies double numbers with a . and require a ,
+char , dp-char !
+0 dp-char 1+ ! 
+
 : ~~~fp ( x1 x2 x3 -- f)
 \ convert a triple integer format finite fraction into a floating point number on the floating point stack
 	S>F ffBasis S>F f/
@@ -12,7 +16,8 @@
 
 : fp~ ( f --- x)
 \ convert a floating point number to single integer finite fraction format
-	ffBasis S>F fdup f* f*
+	ffBasis S>F 
+	fdup f* f*
 	FR>S	\ float to number with rounding preferred to maintain precision
 ;
 
