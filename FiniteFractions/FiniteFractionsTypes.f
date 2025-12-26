@@ -5,7 +5,7 @@
 : RA ~ ;	
 
 ( deg mm ss - t) \ minutes and seconds of arc  
-: DEGMINSEC ~ ;
+: DEGMMSS ~ ;
 : DEC  ~ ; 
 : ALT  ~ ; 
 : AZ	 ~ ; 
