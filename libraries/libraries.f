@@ -16,23 +16,14 @@ create libraries
 \ set the  root directory of the library on the local machine
  TEXTMACRO: libdir
  include "%idir%\local.f"
- 
-\ libname will hold the name of the library requested by NEED
-\   an alternative would be to leave ( caddr u) on the stack but possibly more robust to allocate specific storage
- create libname
- 256 allot
- 
-\ libfound is a flag
- 0 value libfound
 
-: need ( <name> --)
+: need ( <name> -- caddr u | )
 \ include the library <name> or do nothing if it has already been included
 	BL PARSE-WORD 		  ( caddr u)
-	2dup search-context ( caddr u flag)
+	2dup search-context ( caddr u xt +/-1 | caddr u 0)
 	if
 		drop 2drop
 	else
-		libname place
 		s" %libdir%\ForthBase\libraries\manifest.f" included
 	then
 ;
