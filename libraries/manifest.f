@@ -88,7 +88,7 @@
 [THEN]
 
 2dup s" ForthEFW" icompare 0= [IF]
-	create ForthEAF
+	create ForthEFW
 	include "%libdir%\ForthEFW\EFW_SDK.f"
 	include "%libdir%\ForthEFW\EFW_SDK_extend.f"
 	include "%libdir%\ForthEFW\ForthFilterWheel.f"
