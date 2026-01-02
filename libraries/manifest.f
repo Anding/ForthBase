@@ -145,6 +145,11 @@
 	include "%libdir%\ForthVT100\ForthVT100_tables.f"
 [THEN]
 
+2dup s" ForthASTAP" icompare 0= [IF]
+	create ForthASTAP
+	include "%libdir%\ForthASTAP\ForthASTAP.f"
+[THEN]
+
 2drop
 		
 \ as presently coded there is no error message or warning if a requested library cannot be found
