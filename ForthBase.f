@@ -108,9 +108,18 @@ does> ( -- c-addr n)
 
 : $-> ( c-addr n <NAME>)
 \ revise a string value created with $value
-	' >BODY				( c-addr n pfa)	\ will abort if <NAME> is not in the dictionary
-	$!												\ replace the value
-;
+state @ 
+    if
+    \ compiling mode
+        ' >BODY
+        postpone literal    \ postpone to execute when $-> is compiled because literal is immediate
+        postpone $!         \ postpone to execute when $-> is executed
+    else
+   \ interpreting mode
+	    ' >BODY				( c-addr n pfa)	\ will abort if <NAME> is not in the dictionary
+	    $!					\ replace the value
+	then
+; immediate
 
 \ secret stack ***************************************************************
 \ an additional stack to use sparingly: mainly to replace global variables in reentrant code
