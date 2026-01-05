@@ -101,7 +101,7 @@ synonym :alias synonym
 \ define a string value
 	dup >R
 	$,						
-	255 R> - allot			\ reserve the full space, the string is 
+	256 R> - allot			\ reserve the full space for a counted string
 does> ( -- c-addr n)
  	count
 ;
@@ -116,8 +116,27 @@ state @
         postpone $!         \ postpone to execute when $-> is executed
     else
    \ interpreting mode
-	    ' >BODY				( c-addr n pfa)	\ will abort if <NAME> is not in the dictionary
-	    $!					\ replace the value
+	    ' ( <NAME>) >BODY	( c-addr n pfa)	\ will abort if <NAME> is not in the dictionary
+	    $!					\ replace the string
 	then
 ; immediate
 
+: $+> ( c-addr n <NAME>)
+\ append in a string value created with $value
+\ length check to total 256 bytes must be handled by the user
+state @ 
+    if
+    \ compiling mode
+        ' >BODY             ( c-addr n pfa)
+        postpone literal    \ postpone to execute when $-> is compiled because literal is immediate
+        postpone 2>R postpone 2R@ postpone dup postpone c@ postpone + postpone 1+ 
+        postpone swap postpone move postpone 2R> postpone c+!
+    else
+   \ interpreting mode
+	    ' ( <NAME>) >BODY   ( c-addr n pfa)	\ will abort if <NAME> is not in the dictionary
+	    2>R                 ( c-addr R: n pfa)
+	    2R@ dup c@ + 1+     ( c-addr n dest R: n pfa)
+	    swap move            \ append to the string
+	    2R> c+!             ( n pfa R:n pfa)
+	then
+; immediate
