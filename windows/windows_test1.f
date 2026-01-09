@@ -7,7 +7,9 @@ include "%idir%\windows.f"
  
 : uuid-test ( n --)
 	0 do
-		uuid_string make-UUID CR type 
+		uuid_string make-UUID CR type
+		uuid_string zcount CR type
+		uuid_string UUIDlength CR type
 	loop CR
 ;
 

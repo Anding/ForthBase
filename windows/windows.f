@@ -10,14 +10,17 @@ Extern: void "c" ForthBaseTimezone( int * bias, int * DST);
 
 37 CONSTANT UUIDlength \ includes zero terminator
 64 CONSTANT TSlength
+UUIDlength buffer: win.UUIDstring
+TSlength buffer: win.Tstring
 
 : make-UUID ( caddr -- caddr u)
 \ prepare a UUID in string format 1aa02f27-cfd3-4b13-9903-d9b524214bd8
 \ cddr must have 37 bytes allocated
+\ caddr is zero terminated
 	ForthbaseUUID zcount
 ;
 
-: timestamp ( caddr flags -- caddr u)
+: make-timestamp ( caddr flags -- caddr u)
 \ prepare a timestamp of system time
 \ cddr expects 256 bytes allocated
 \ flags: 1 - local time (else UT)
@@ -26,7 +29,7 @@ Extern: void "c" ForthBaseTimezone( int * bias, int * DST);
 
 : now ( flags -- yymmdd hhmmss) { flags | yymmdd hhmmss }	\ VFX locals
 \ return the current date and time in finite fraction format
-\ flags: 1 - local time (else UT)
+\ flags: 1 - local time (0 for UT)
 \ flags: 2 - subtract 12 hours and return the date and midnight (else actual)
 	addr yymmdd addr hhmmss flags ForthBaseNow
 	yymmdd hhmmss
@@ -38,4 +41,12 @@ Extern: void "c" ForthBaseTimezone( int * bias, int * DST);
 \ return a flag to indicate if DST is operation
 	addr bias addr DST ForthBaseTimezone
 	bias DST
+;
+
+: UUID ( - carddr u)
+    win.UUIDstring make-UUID 
+;
+
+: timestamp ( -- caddr u)
+    win.Tstring 1 make-timestamp
 ;
