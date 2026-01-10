@@ -1,5 +1,5 @@
-// dllmain.cpp : Defines the entry point for the DLL application.
-// remove the precomipled header and specifically include the framework.h file
+// dllmain.c : Defines the entry point for the DLL application.
+// remove the precompiled header and specifically include the framework.h file
 
 #include "framework.h"
 
