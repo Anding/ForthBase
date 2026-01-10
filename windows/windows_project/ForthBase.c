@@ -82,7 +82,7 @@ FORTHBASE_API char *ForthBaseTimestamp(char *caddr, int flags)
         (void)sprintf_s(caddr, TIMESTAMP_length, "%04d-%02d-%02dT%02d:%02d:%02dZ", year, month, day, hour, minute, second);
     }
     else {
-        WORD result = GetTimeZoneInformation(&tzInfo);
+        WORD result = (WORD)GetTimeZoneInformation(&tzInfo);
         bias = tzInfo.Bias - (result == TIME_ZONE_ID_DAYLIGHT ? 60 : 0);    // tzInfo.Bias is the base timezone offset ignoring DST
         bias_hours = - bias / 60;
         bias_minutes = abs(bias + bias_hours * 60);
