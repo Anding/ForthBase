@@ -150,6 +150,11 @@
 	include "%libdir%\ForthASTAP\ForthASTAP.f"
 [THEN]
 
+2dup s" regex" icompare 0= [IF]
+    create regex
+    include "%libdir%"\ForthBase\regex\regex.f
+[THEN]
+
 2drop
 		
 \ as presently coded there is no error message or warning if a requested library cannot be found
