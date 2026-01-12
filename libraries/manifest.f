@@ -152,7 +152,7 @@
 
 2dup s" regex" icompare 0= [IF]
     create regex
-    include "%libdir%"\ForthBase\regex\regex.f
+    include "%libdir%\ForthBase\regex\regex.f"
 [THEN]
 
 2drop

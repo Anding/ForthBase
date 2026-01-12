@@ -1,5 +1,8 @@
 \ specialized buffers with additional functions
 
+NEED regex
+
+\ Dedicated filepath buffer
 BEGIN-STRUCTURE	BUFFER_USER_SPACE_FILEPATH
 	4 +FIELD BUFFER_LEN_DIR
 END-STRUCTURE
@@ -36,4 +39,36 @@ END-STRUCTURE
 	R@ BUFFER_POINTER @ R@ BUFFER_ADDR -
 	R> BUFFER_LEN_DIR !
 ;
+
+\ Regex searching within a buffer
+BEGIN-STRUCTURE	BUFFER_USER_SPACE_REGEX
+	4 +FIELD BUFFER_SEARCH_POINTER
+END-STRUCTURE
+
+: buffer-reset-search ( buf --)
+\ reset the search pointer to the start of the buffer
+    >R
+    R@ BUFFER_ADDR
+    R> BUFFER_SEARCH_POINTER !
+;
+
+: buffer-match ( c-addrR uR buf -- c-addrM uM -1 | 0)
+\ attempt to match the regex in c-addrR uR in the buffer
+\ if successful, return the match in addrM uM and advance the buffer pointer after the match
+\ else return 0
+    >R
+    R@ BUFFER_POINTER @
+    R@ BUFFER_SEARCH_POINTER @ - 0 max ( c-addrR uR uT)
+    R@ BUFFER_SEARCH_POINTER @ swap ( c-addrR uR c-addrT uT)
+    2swap match ( start len -1 | 0)
+    if
+        swap R@ BUFFER_SEARCH_POINTER @ + swap ( c-addrM uM)
+        2dup + R> BUFFER_SEARCH_POINTER !
+        -1
+    else
+        R> drop 0
+    then
+;
+        
+
 
