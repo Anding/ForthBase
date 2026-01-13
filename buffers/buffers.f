@@ -95,6 +95,16 @@ END-STRUCTURE
 	R@ BUFFER_POINTER +! R>									
 ;
 
+: buffer-read-file ( buf n fileid -- n2 IOR)
+\ read a file into an existing buffer
+    >R >R dup dup R>                ( buf buf buf n R:fileid)
+    swap buffer_space min           ( buf buf n' R:fileid)
+    swap BUFFER_POINTER @ swap      ( buf buf caddr n R:fileid)
+	R> read-file ( buf n2 IOR)
+	>R dup rot ( n2 n2 buf R:IOR) BUFFER_POINTER +!
+	R> ( n2 IOR)
+;
+
 : buffer-to-string ( buf -- c-addr u)
 \ provide the buffer address and size in string format
 	>R
