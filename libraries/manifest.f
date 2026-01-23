@@ -143,6 +143,7 @@
 	create ForthVT100
 	include "%libdir%\ForthVT100\ForthVT100.f"
 	include "%libdir%\ForthVT100\ForthVT100_tables.f"
+	include "%libdir%\ForthVT100\ForthVT100_UI.f"
 [THEN]
 
 2dup s" ForthASTAP" icompare 0= [IF]
