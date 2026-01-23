@@ -20,14 +20,23 @@
    BL BL 0 ~custom$
  ;
 
+: <.Dec> ( DEGMMSS -- caddr u)
+\ format a declination value
+    ':' ':' -1 ~custom$ 
+;
+
 : .Dec ( DEGMMSS --)
 \ print a declination value to the console
-    ':' ':' -1 ~custom$ type
- ;
+    <.Dec> type
+;
+
+: <.RA> ( HHMMSS -- caddr u)
+    ':' ':' 0 ~custom$ 
+;
 
 : .RA ( HHMMSS --)
 \ print a time value (often RA) to the console
-    ':' ':' 0 ~custom$ type
+    <.RA> type
  ;
  
  synonym .ALT .RA
