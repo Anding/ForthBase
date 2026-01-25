@@ -26,6 +26,15 @@ END-STRUCTURE
 	R> BUFFER_LEN_DIR @ 3 -
 ;
 
+: buffer-folder-to-string
+\ provide the folder part of the buffer in string format
+\ 	include the drive part, include final delimiter     
+    >R
+    R@ BUFFER_ADDR 
+    R> BUFFER_LEN_DIR @
+;    
+
+
 : buffer-filename-to-string ( buf -- caddr u)
 \ provide the filename part of the buffer in string format
 	>R
@@ -34,7 +43,7 @@ END-STRUCTURE
 ;
 
 : buffer-punctuate-filepath ( buf --)
-\ confirm that the directory part of the filepath, including final delimiter is written
+\ confirm that the folder part of the filepath, including final delimiter is written
 	>R 
 	R@ BUFFER_POINTER @ R@ BUFFER_ADDR -
 	R> BUFFER_LEN_DIR !
