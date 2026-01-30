@@ -1,5 +1,8 @@
 \ finite fraction data types that also serve for labeling in code and scripts
 
+( yyyy mm dd - t) \ single cell date format
+: YYMMDD ~ ;
+
 ( hh mm ss - t) \ minutes and seconds of time
 : HHMMSS ~ ;
 : RA ~ ;	
