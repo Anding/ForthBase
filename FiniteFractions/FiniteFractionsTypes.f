@@ -22,7 +22,7 @@
 \ obtain an  string in the format XX YY ZZ from single integer finite fraction format, suitable for the FITS file header
    BL BL 0 ~custom$
  ;
-
+ 
 : <.Dec> ( DEGMMSS -- caddr u)
 \ format a declination value
     ':' ':' -1 ~custom$ 
@@ -42,5 +42,8 @@
     <.RA> type
  ;
  
+
+ synonym <.ALT> <.RA>
+ synonym <.AZ> <.RA>
  synonym .ALT .RA
  synonym .AZ .RA
