@@ -103,7 +103,7 @@
 2dup s" ForthXISF" icompare 0= [IF]
 	create ForthXISF
 	include "%libdir%\ForthXISF\XISF.f"
-	include "%libdir%\ForthXISF\XISF_filename.f"
+	include "%libdir%\ForthXISF\FITS.f"
 	include "%libdir%\ForthXISF\properties_obs.f"
 	include "%libdir%\ForthXISF\properties_rig.f"		
 	include "%libdir%\ForthXISF\XISF_maps.f"
