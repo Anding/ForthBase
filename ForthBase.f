@@ -81,6 +81,16 @@ END-CODE
 
 \ strings *********************************************************************
 
+: /string ( caddr n m --)
+\ VFX does not check for 0 length strings
+    2dup >= if
+        dup >R -
+        swap R> + swap
+    else
+        drop
+    then
+;
+
 :rem $, ( caddr u --)
 \ copy a string into the dictionary in counted string format
 
