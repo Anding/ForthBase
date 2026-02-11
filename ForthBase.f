@@ -143,3 +143,26 @@ state @
 	    2R> c+!             ( n pfa R:n pfa)
 	then
 ; immediate
+
+\ compute a hash h1 by hashing x1 and h0
+\ 	borrowed from simple-tester and used in scanning a .wcs file
+: hash ( x1 h0 -- h1)
+	31 * swap 13 + xor
+;	
+	
+\ hash a string to a single value on stack
+: hash$ ( c-addr u -- h)
+	swap 2dup + swap ( u end+1 start)
+	?do											\ Let h0 = u
+		i c@ ( h_i x) swap hash ( h_j) 	\ j = i + 1
+	loop
+;
+
+: toInteger ( caddr u -- n)
+\ convert a string to an integer
+    isInteger? case
+        0 of 0      endof       \ failure as zero
+        2 of nip    endof       \ a double number drops the high cell
+    endcase                     \ end case consumes '1' and leaves the number
+;
+     
