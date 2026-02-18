@@ -1,11 +1,5 @@
-
-\ documentation ****************************************************************
-
-synonym :rem \  
-synonym :alias synonym
-
-
-\ formatting and output *********************************************************
+\ *****************************************************************************
+\ formatting and output
 
 : TAB
 	9 emit
@@ -21,7 +15,8 @@ synonym :alias synonym
 	<# # # # # # # # # # # # # # # # # #>
 ;
 
-\ data structures and memory ****************************************************
+\ *****************************************************************************
+\ data structures and memory
 
 \ define an ENUM data-structure with similar syntax to a STRUCTURE
 : BEGIN-ENUM 0 ;
@@ -79,7 +74,14 @@ CODE twist2 ( x1-x2 -- x2-x1)
     NEXT,
 END-CODE
 
-\ strings *********************************************************************
+\ *****************************************************************************
+\ string convenience functions
+
+synonym $! place ( caddr u addr --) 
+\ copy a string into memory at addr in counted string format
+
+synonym $@ count ( addr -- caddr u) 
+\ reference on the stack the counted string at addr
 
 : /string ( caddr n m --)
 \ VFX does not check for 0 length strings
@@ -90,59 +92,6 @@ END-CODE
         drop
     then
 ;
-
-:rem $, ( caddr u --)
-\ copy a string into the dictionary in counted string format
-
-:alias $! place ( caddr u addr --) 
-\ copy a string into memory at addr in counted string format
-
-:alias $@ count ( addr -- caddr u) 
-\ reference on the stack the counted string at addr
-
-: $value create ( c-addr n <name> --) 
-\ define a string value
-	dup >R
-	$,						
-	256 R> - allot			\ reserve the full space for a counted string
-does> ( -- c-addr n)
- 	count
-;
-
-: $-> ( c-addr n <NAME>)
-\ revise a string value created with $value
-state @ 
-    if
-    \ compiling mode
-        ' >BODY
-        postpone literal    \ postpone to execute when $-> is compiled because literal is immediate
-        postpone $!         \ postpone to execute when $-> is executed
-    else
-   \ interpreting mode
-	    ' ( <NAME>) >BODY	( c-addr n pfa)	\ will abort if <NAME> is not in the dictionary
-	    $!					\ replace the string
-	then
-; immediate
-
-: $+> ( c-addr n <NAME>)
-\ append in a string value created with $value
-\ length check to total 256 bytes must be handled by the user
-state @ 
-    if
-    \ compiling mode
-        ' >BODY             ( c-addr n pfa)
-        postpone literal    \ postpone to execute when $-> is compiled because literal is immediate
-        postpone 2>R postpone 2R@ postpone dup postpone c@ postpone + postpone 1+ 
-        postpone swap postpone move postpone 2R> postpone c+!
-    else
-   \ interpreting mode
-	    ' ( <NAME>) >BODY   ( c-addr n pfa)	\ will abort if <NAME> is not in the dictionary
-	    2>R                 ( c-addr R: n pfa)
-	    2R@ dup c@ + 1+     ( c-addr n dest R: n pfa)
-	    swap move            \ append to the string
-	    2R> c+!             ( n pfa R:n pfa)
-	then
-; immediate
 
 \ compute a hash h1 by hashing x1 and h0
 \ 	borrowed from simple-tester and used in scanning a .wcs file
@@ -165,4 +114,78 @@ state @
         2 of nip    endof       \ a double number drops the high cell
     endcase                     \ end case consumes '1' and leaves the number
 ;
-     
+
+\ *****************************************************************************
+\ a value type for strings
+
+: $value ( c-addr u <name> -- ) 
+\ create a value type for strings with 255 bytes
+    Create 256 here swap allot place
+    Does> ( -- c-addr u ) count
+;
+
+: $-> ( c-addr u <name> -- ) 
+\ write the string c-addr u to <name>
+    ' >body place ;
+ndcs: ( <name> -- )
+    ' >body  postpone LITERAL  postpone PLACE 
+;
+
+: +place ( caddr u addr -- )
+\ append a string c-addr u onto the counted string at addr
+     dup >r count  dup >r +  swap dup >r
+     move r> r> + r> c!
+;
+
+: $+> ( c-addr u <name> -- )
+\ append the string c-addr u to <name>
+    ' >body +place ;
+ndcs: ( <name> -- )
+     ' >body  postpone LITERAL  postpone +PLACE
+;
+
+\ *****************************************************************************
+\ a string builder on the pad
+
+ wordlist ( wid) constant stringbuilder.wid
+ 
+ : <$  ( -- ) 
+\ start a new string on the pad 
+    0 pad c!
+    stringbuilder.wid +order  \ add the stringbuilder wordlist to the search order 
+;
+
+: $> ( -- c-addr u )
+\ finish the string and reference it on the stack
+    pad count 
+    stringbuilder.wid -order  \ drop the stringbuilder wordlist from the search order 
+;
+ 
+get-current ( wid) stringbuilder.wid set-current
+\ compile the following defintions into the stringbuilder wordlist
+\ these are short words and we only want them available inside of <$ ... $> to avoid conflicts
+
+: $ ( c-addr u -- ) 
+\ append the string c-addr u to the string being built on the pad
+    pad +place 
+;
+
+: _ ( c -- ) 
+\ append the char c to the string being built on the pad 
+    pad count + c! 1 pad c+!
+;
+
+( wid) set-current
+\ revert to the original wordlist to take further definitions
+
+
+
+
+
+
+
+
+
+  
+
+  
