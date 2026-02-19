@@ -127,7 +127,7 @@ synonym $@ count ( addr -- caddr u)
 : $-> ( c-addr u <name> -- ) 
 \ write the string c-addr u to <name>
     ' >body place ;
-ndcs: ( <name> -- )
+ndcs: ( <name> -- )     \ i.e. "do the following at compile time..."
     ' >body  postpone LITERAL  postpone PLACE 
 ;
 
@@ -150,16 +150,20 @@ ndcs: ( <name> -- )
  wordlist ( wid) constant stringbuilder.wid
  
  : <$  ( -- ) 
-\ start a new string on the pad 
-    0 pad c!
+ \ start a new string on the pad     
+ state @ 0= if 0 pad c!
+    else 0 postpone literal postpone pad postpone c!
+ then
     stringbuilder.wid +order  \ add the stringbuilder wordlist to the search order 
-;
+; immediate
 
 : $> ( -- c-addr u )
 \ finish the string and reference it on the stack
-    pad count 
-    stringbuilder.wid -order  \ drop the stringbuilder wordlist from the search order 
-;
+state @ 0= if pad count
+    else postpone pad postpone count 
+then
+    stringbuilder.wid -order  \ drop the stringbuilder wordlist from the search order
+; immediate
  
 get-current ( wid) stringbuilder.wid set-current
 \ compile the following defintions into the stringbuilder wordlist

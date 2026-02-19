@@ -1,8 +1,7 @@
 \ test for ForthBase.f
 
+need forthBase
 need simple-tester
-
-include "%idir%\ForthBase.f"
 
 Tstart
 
@@ -20,4 +19,9 @@ T{ s" Second" $+> my$value01 my$value01 hashS }T s" FirstSecond" hashS ==
 : inside01 s" Third" $+> my$value01 ;
 T{ inside01 my$value01 hashS }T s" FirstSecondThird" hashS ==  
 
-Tend
+T{ <$ s" This is" $ BL _ s" a string" $ '!' _ $> hashS }T s" This is a string!" hashS ==
+
+: inside02 <$ s" This is" $ BL _ s" a string" $ '!' _ $> ;
+T{ inside02 hashS }T s" This is a string!" hashS ==
+
+Tend 
