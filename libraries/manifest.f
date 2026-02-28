@@ -108,7 +108,8 @@
 	include "%libdir%\ForthXISF\properties_rig.f"		
 	include "%libdir%\ForthXISF\XISF_maps.f"
 	include "%libdir%\ForthXISF\XISF_load.f"
-	include "%libdir%\ForthXISF\FITS_load.f"				
+	include "%libdir%\ForthXISF\FITS_load.f"
+	include "%libdir%\ForthXISF\XISF_spawn.f"				
 [THEN]
 
 2dup s" ForthXML" icompare 0= [IF]
