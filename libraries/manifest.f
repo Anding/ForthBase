@@ -126,6 +126,7 @@
 2dup s" ImageAnalysis" icompare 0= [IF]
 	create ImageAnalysis
 	include "%libdir%\ImageAnalysis\ImageAnalysis.f"
+	include "%libdir%\ImageAnalysis\DisplayFunction.f"	
 [THEN]
 
 2dup s" simple-tester" icompare 0= [IF]
