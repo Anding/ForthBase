@@ -109,7 +109,9 @@
 	include "%libdir%\ForthXISF\XISF_maps.f"
 	include "%libdir%\ForthXISF\XISF_load.f"
 	include "%libdir%\ForthXISF\FITS_load.f"
-	include "%libdir%\ForthXISF\XISF_spawn.f"				
+	include "%libdir%\ForthXISF\XISF_spawn.f"	
+	include "%libdir%\ForthXISF\PNG.f"
+	include "%libdir%\ForthXISF\RAW.f"				
 [THEN]
 
 2dup s" ForthXML" icompare 0= [IF]
@@ -126,6 +128,7 @@
 2dup s" ImageAnalysis" icompare 0= [IF]
 	create ImageAnalysis
 	include "%libdir%\ImageAnalysis\ImageAnalysis.f"
+    include "%libdir%\ImageAnalysis\ImageAnalysis_export.f"
 	include "%libdir%\ImageAnalysis\DisplayFunction.f"	
 [THEN]
 
