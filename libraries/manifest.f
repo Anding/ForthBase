@@ -114,6 +114,16 @@
 	include "%libdir%\ForthXISF\RAW.f"				
 [THEN]
 
+2dup s" BMP" icompare 0= [IF]
+	create BMP
+	include "%libdir%\ForthXISF\BMP.f"
+[THEN]
+
+2dup s" FITS_projection" icompare 0= [IF]
+	create FITS_projection
+	include "%libdir%\ForthXISF\FITS_projection.f"
+[THEN]
+
 2dup s" ForthXML" icompare 0= [IF]
 	create ForthXML
 	include "%libdir%\ForthXML\xml.f"
@@ -166,7 +176,6 @@
 2drop
 		
 \ as presently coded there is no error message or warning if a requested library cannot be found
-
 
 
 
