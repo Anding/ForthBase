@@ -102,50 +102,62 @@
 
 2dup s" ForthAstroFormats" icompare 0= [IF]
 	create ForthAstroFormats
-	include "%libdir%\ForthXISF\Frame.f"
-	include "%libdir%\ForthXISF\FITS.f"
-	include "%libdir%\ForthXISF\FITS_cards.f"
+	include "%libdir%\ForthAstroFormats\Frame.f"
+	include "%libdir%\ForthAstroFormats\FITS.f"
+	include "%libdir%\ForthAstroFormats\FITS_cards.f"
 [THEN]
 
 2dup s" ForthXISFCodec" icompare 0= [IF]
 	create ForthXISFCodec
 	NEED ForthAstroFormats
-	include "%libdir%\ForthXISF\XISF.f"
+	include "%libdir%\ForthAstroFormats\XISF.f"
 [THEN]
 
 2dup s" ForthImageLoaders" icompare 0= [IF]
 	create ForthImageLoaders
 	NEED ForthXISFCodec
-	include "%libdir%\ForthXISF\XISF_load.f"
-	include "%libdir%\ForthXISF\FITS_load.f"
+	include "%libdir%\ForthAstroFormats\XISF_load.f"
+	include "%libdir%\ForthAstroFormats\FITS_load.f"
 [THEN]
 
 2dup s" ForthImageExport" icompare 0= [IF]
 	create ForthImageExport
 	NEED ForthXISFCodec
-	include "%libdir%\ForthXISF\PNG.f"
-	include "%libdir%\ForthXISF\RAW.f"
+	include "%libdir%\ForthAstroFormats\PNG.f"
+	include "%libdir%\ForthAstroFormats\RAW.f"
+[THEN]
+
+2dup s" ForthAstroMetadata" icompare 0= [IF]
+	create ForthAstroMetadata
+	NEED ForthAstroFormats
+	include "%libdir%\ForthAstroFormats\properties_obs.f"
+	include "%libdir%\ForthAstroFormats\properties_rig.f"
+	include "%libdir%\ForthAstroFormats\XISF_maps.f"
+[THEN]
+
+2dup s" ForthFrameTools" icompare 0= [IF]
+	create ForthFrameTools
+	NEED ForthAstroFormats
+	include "%libdir%\ForthAstroFormats\XISF_spawn.f"
 [THEN]
 
 2dup s" ForthXISF" icompare 0= [IF]
 	create ForthXISF
 	NEED ForthImageLoaders
 	NEED ForthImageExport
-	include "%libdir%\ForthXISF\properties_obs.f"
-	include "%libdir%\ForthXISF\properties_rig.f"		
-	include "%libdir%\ForthXISF\XISF_maps.f"
-	include "%libdir%\ForthXISF\XISF_spawn.f"	
+	NEED ForthAstroMetadata
+	NEED ForthFrameTools
 [THEN]
 
 2dup s" BMP" icompare 0= [IF]
 	create BMP
 	NEED ForthXISFCodec
-	include "%libdir%\ForthXISF\BMP.f"
+	include "%libdir%\ForthAstroFormats\BMP.f"
 [THEN]
 
 2dup s" FITS_projection" icompare 0= [IF]
 	create FITS_projection
-	include "%libdir%\ForthXISF\FITS_projection.f"
+	include "%libdir%\ForthAstroFormats\FITS_projection.f"
 [THEN]
 
 2dup s" ForthXML" icompare 0= [IF]
