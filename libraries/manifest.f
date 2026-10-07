@@ -229,6 +229,11 @@
 	include "%libdir%\ForthSeiza\ForthSeiza.f"
 [THEN]
 
+2dup s" ForthAstroSolver" icompare 0= [IF]
+	create ForthAstroSolver
+	include "%libdir%\ForthAstroFormats\Solver.f"
+[THEN]
+
 2dup s" AstroImagingInForth" icompare 0= [IF]
 	create AstroImagingInForth
 	include "%libdir%\AstroImagingInForth\capabilities\AstroImagingInForth.f"
