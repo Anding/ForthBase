@@ -213,8 +213,14 @@
 	include "%libdir%\ForthVT100\ForthVT100_UI.f"
 [THEN]
 
+2dup s" ForthASTAPFocus" icompare 0= [IF]
+	create ForthASTAPFocus
+	include "%libdir%\ForthASTAP\ForthASTAPFocus.f"
+[THEN]
+
 2dup s" ForthASTAP" icompare 0= [IF]
 	create ForthASTAP
+	NEED ForthASTAPFocus
 	include "%libdir%\ForthASTAP\ForthASTAP.f"
 [THEN]
 
