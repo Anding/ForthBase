@@ -1,269 +1,264 @@
-\ check the string stored in libname against the available library names and include the relevant files if matched
+\ Private loader dictionary used by NEED. Each action keeps nonuniform paths
+\ and dependencies explicit; library-loader supplies one-time execution.
 
-2dup s" TestWord1" icompare 0= [IF]
-	create TestWord1
-	include "%libdir%\ForthBase\libraries\Test1.f"
-[THEN]
+: load.TestWord1 ( -- )
+    s" %libdir%\ForthBase\libraries\Test1.f" included
+;
+' load.TestWord1 library-loader TestWord1
 
-2dup s" TestWord2" icompare 0= [IF]
-	create TestWord2
-	include "%libdir%\ForthBase\libraries\Test2.f"
-[THEN]
+: load.TestWord2 ( -- )
+    s" %libdir%\ForthBase\libraries\Test2.f" included
+;
+' load.TestWord2 library-loader TestWord2
 
-2dup s" ForthBase" icompare 0= [IF]
-	create ForthBase
-	\ once libname is created as a word, NEED will have a flag know not to include it again
-	\  an alternative would be to create the word in the library source file but some libraries may be externally authored
-	include "%libdir%\ForthBase\ForthBase.f"
-[THEN]
+: load.ForthBase ( -- )
+    s" %libdir%\ForthBase\ForthBase.f" included
+;
+' load.ForthBase library-loader ForthBase
 
-2dup s" AstroCalc" icompare 0= [IF]
-	create AstroCalc
-	include "%libdir%\AstroCalc\ForthAstroCalc\ForthAstroCalc.f
-[THEN]
+: load.AstroCalc ( -- )
+    s" %libdir%\AstroCalc\ForthAstroCalc\ForthAstroCalc.f" included
+;
+' load.AstroCalc library-loader AstroCalc
 
-2dup s" Buffers" icompare 0= [IF]
-	create Buffers
-	include "%libdir%\ForthBase\buffers\buffers.f"
-	include "%libdir%\ForthBase\buffers\bufferTools.f"	
-[THEN]
+: load.Buffers ( -- )
+    s" %libdir%\ForthBase\buffers\buffers.f" included
+    s" %libdir%\ForthBase\buffers\bufferTools.f" included
+;
+' load.Buffers library-loader Buffers
 
-2dup s" CommandStrings" icompare 0= [IF]
-	create CommandStrings
-	include "%libdir%\ForthBase\CommandStrings\CommandStrings.f"
-[THEN]
+: load.CommandStrings ( -- )
+    s" %libdir%\ForthBase\CommandStrings\CommandStrings.f" included
+;
+' load.CommandStrings library-loader CommandStrings
 
-2dup s" FiniteFractions" icompare 0= [IF]
-	create FiniteFractions
-	include "%libdir%\ForthBase\FiniteFractions\FiniteFractions.f"
-	include "%libdir%\ForthBase\FiniteFractions\FiniteFractionsTypes.f"	
-	include "%libdir%\ForthBase\FiniteFractions\FiniteFractionsFloatingPoint.f"	
-[THEN]
+: load.FiniteFractions ( -- )
+    s" %libdir%\ForthBase\FiniteFractions\FiniteFractions.f" included
+    s" %libdir%\ForthBase\FiniteFractions\FiniteFractionsTypes.f" included
+    s" %libdir%\ForthBase\FiniteFractions\FiniteFractionsFloatingPoint.f" included
+;
+' load.FiniteFractions library-loader FiniteFractions
 
-2dup s" network" icompare 0= [IF]
-	create network
-	include "%libdir%\ForthBase\network\VFX32network.f"
-[THEN]
+: load.network ( -- )
+    s" %libdir%\ForthBase\network\VFX32network.f" included
+;
+' load.network library-loader network
 
-2dup s" Serial" icompare 0= [IF]
-	create Serial
-	include "%libdir%\ForthBase\serial\VFX32serial.f"
-[THEN]
+: load.Serial ( -- )
+    s" %libdir%\ForthBase\serial\VFX32serial.f" included
+;
+' load.Serial library-loader Serial
 
-2dup s" Shared" icompare 0= [IF]
-	create Shared
-	include "%libdir%\ForthBase\shared\shared.f"	
-[THEN]
+: load.Shared ( -- )
+    s" %libdir%\ForthBase\shared\shared.f" included
+;
+' load.Shared library-loader Shared
 
-2dup s" Windows" icompare 0= [IF]
-	create Windows
-	include "%libdir%\ForthBase\windows\windows.f"	
-[THEN]
+: load.Windows ( -- )
+    s" %libdir%\ForthBase\windows\windows.f" included
+;
+' load.Windows library-loader Windows
 
-2dup s" Forth-map" icompare 0= [IF]
-	create forth-map
-	include "%libdir%\forth-map\map.fs"
-	include "%libdir%\forth-map\map-tools.fs"
-[THEN]
+: load.Forth-map ( -- )
+    s" %libdir%\forth-map\map.fs" included
+    s" %libdir%\forth-map\map-tools.fs" included
+;
+' load.Forth-map library-loader Forth-map
 
-2dup s" ForthASI" icompare 0= [IF]
-	create ForthASI
-	include "%libdir%\ForthASI\ForthASI\ASI_SDK.f"
-	include "%libdir%\ForthASI\ForthASI\ASI_SDK_extend.f"
-	include "%libdir%\ForthASI\ForthASI\ForthAstroCamera.f"
-	include "%libdir%\ForthASI\ForthASI\ForthAstroCameraMaps.f"
-[THEN]
+: load.ForthASI ( -- )
+    s" %libdir%\ForthASI\ForthASI\ASI_SDK.f" included
+    s" %libdir%\ForthASI\ForthASI\ASI_SDK_extend.f" included
+    s" %libdir%\ForthASI\ForthASI\ForthAstroCamera.f" included
+    s" %libdir%\ForthASI\ForthASI\ForthAstroCameraMaps.f" included
+;
+' load.ForthASI library-loader ForthASI
 
-2dup s" ForthAstroCalc" icompare 0= [IF]
-	create ForthAstroCalc
-	include "%libdir%\AstroCalc\ForthAstroCalc\ForthAstroCalc.f"
-[THEN]
+: load.ForthAstroCalc ( -- )
+    s" %libdir%\AstroCalc\ForthAstroCalc\ForthAstroCalc.f" included
+;
+' load.ForthAstroCalc library-loader ForthAstroCalc
 
-2dup s" ForthEAF" icompare 0= [IF]
-	create ForthEAF
-	include "%libdir%\ForthEAF\EAF_SDK.f"
-	include "%libdir%\ForthEAF\EAF_SDK_extend.f"
-	include "%libdir%\ForthEAF\ForthFocuser.f"
-	include "%libdir%\ForthEAF\ForthFocuserMaps.f"
-[THEN]
+: load.ForthEAF ( -- )
+    s" %libdir%\ForthEAF\EAF_SDK.f" included
+    s" %libdir%\ForthEAF\EAF_SDK_extend.f" included
+    s" %libdir%\ForthEAF\ForthFocuser.f" included
+    s" %libdir%\ForthEAF\ForthFocuserMaps.f" included
+;
+' load.ForthEAF library-loader ForthEAF
 
-2dup s" ForthEFW" icompare 0= [IF]
-	create ForthEFW
-	include "%libdir%\ForthEFW\EFW_SDK.f"
-	include "%libdir%\ForthEFW\EFW_SDK_extend.f"
-	include "%libdir%\ForthEFW\ForthFilterWheel.f"
-	include "%libdir%\ForthEFW\ForthFilterWheelMaps.f"
-[THEN]
+: load.ForthEFW ( -- )
+    s" %libdir%\ForthEFW\EFW_SDK.f" included
+    s" %libdir%\ForthEFW\EFW_SDK_extend.f" included
+    s" %libdir%\ForthEFW\ForthFilterWheel.f" included
+    s" %libdir%\ForthEFW\ForthFilterWheelMaps.f" included
+;
+' load.ForthEFW library-loader ForthEFW
 
-2dup s" ForthKMTronic" icompare 0= [IF]
-	create ForthKMTronic
-	include "%libdir%\ForthKMTronic\KMTronic.f"
-[THEN]
+: load.ForthKMTronic ( -- )
+    s" %libdir%\ForthKMTronic\KMTronic.f" included
+;
+' load.ForthKMTronic library-loader ForthKMTronic
 
-2dup s" ForthAstroFormats" icompare 0= [IF]
-	create ForthAstroFormats
-	include "%libdir%\ForthAstroFormats\Frame.f"
-	include "%libdir%\ForthAstroFormats\FITS.f"
-	include "%libdir%\ForthAstroFormats\FITS_cards.f"
-[THEN]
+: load.ForthAstroFormats ( -- )
+    s" %libdir%\ForthAstroFormats\Frame.f" included
+    s" %libdir%\ForthAstroFormats\FITS.f" included
+    s" %libdir%\ForthAstroFormats\FITS_cards.f" included
+;
+' load.ForthAstroFormats library-loader ForthAstroFormats
 
-2dup s" ForthRasterIO" icompare 0= [IF]
-	create ForthRasterIO
-	include "%libdir%\ForthAstroFormats\RasterIO.f"
-[THEN]
+: load.ForthRasterIO ( -- )
+    s" %libdir%\ForthAstroFormats\RasterIO.f" included
+;
+' load.ForthRasterIO library-loader ForthRasterIO
 
-2dup s" ForthAtomicFile" icompare 0= [IF]
-	create ForthAtomicFile
-	include "%libdir%\ForthAstroFormats\AtomicFile.f"
-[THEN]
+: load.ForthAtomicFile ( -- )
+    s" %libdir%\ForthAstroFormats\AtomicFile.f" included
+;
+' load.ForthAtomicFile library-loader ForthAtomicFile
 
-2dup s" ForthXISFCodec" icompare 0= [IF]
-	create ForthXISFCodec
-	NEED ForthAstroFormats
-	include "%libdir%\ForthAstroFormats\XISF.f"
-[THEN]
+: load.ForthXISFCodec ( -- )
+    s" ForthAstroFormats" need-library
+    s" %libdir%\ForthAstroFormats\XISF.f" included
+;
+' load.ForthXISFCodec library-loader ForthXISFCodec
 
-2dup s" ForthImageLoaders" icompare 0= [IF]
-	create ForthImageLoaders
-	NEED ForthXISFCodec
-	include "%libdir%\ForthAstroFormats\XISF_load.f"
-	include "%libdir%\ForthAstroFormats\FITS_load.f"
-[THEN]
+: load.ForthImageLoaders ( -- )
+    s" ForthXISFCodec" need-library
+    s" %libdir%\ForthAstroFormats\XISF_load.f" included
+    s" %libdir%\ForthAstroFormats\FITS_load.f" included
+;
+' load.ForthImageLoaders library-loader ForthImageLoaders
 
-2dup s" ForthImageExport" icompare 0= [IF]
-	create ForthImageExport
-	NEED ForthAstroFormats
-	NEED ForthRasterIO
-	include "%libdir%\ForthAstroFormats\PNG.f"
-	include "%libdir%\ForthAstroFormats\RAW.f"
-[THEN]
+: load.ForthImageExport ( -- )
+    s" ForthAstroFormats" need-library
+    s" ForthRasterIO" need-library
+    s" %libdir%\ForthAstroFormats\PNG.f" included
+    s" %libdir%\ForthAstroFormats\RAW.f" included
+;
+' load.ForthImageExport library-loader ForthImageExport
 
-2dup s" ForthAstroMetadata" icompare 0= [IF]
-	create ForthAstroMetadata
-	NEED ForthAstroFormats
-	include "%libdir%\ForthAstroFormats\properties_obs.f"
-	include "%libdir%\ForthAstroFormats\properties_rig.f"
-	include "%libdir%\ForthAstroFormats\XISF_maps.f"
-[THEN]
+: load.ForthAstroMetadata ( -- )
+    s" ForthAstroFormats" need-library
+    s" %libdir%\ForthAstroFormats\properties_obs.f" included
+    s" %libdir%\ForthAstroFormats\properties_rig.f" included
+    s" %libdir%\ForthAstroFormats\XISF_maps.f" included
+;
+' load.ForthAstroMetadata library-loader ForthAstroMetadata
 
-2dup s" ForthFrameTools" icompare 0= [IF]
-	create ForthFrameTools
-	NEED ForthAstroFormats
-	include "%libdir%\ForthAstroFormats\XISF_spawn.f"
-[THEN]
+: load.ForthFrameTools ( -- )
+    s" ForthAstroFormats" need-library
+    s" %libdir%\ForthAstroFormats\XISF_spawn.f" included
+;
+' load.ForthFrameTools library-loader ForthFrameTools
 
-2dup s" ForthXISF" icompare 0= [IF]
-	create ForthXISF
-	NEED ForthImageLoaders
-	NEED ForthImageExport
-	NEED ForthAstroMetadata
-	NEED ForthFrameTools
-[THEN]
+: load.ForthXISF ( -- )
+    s" ForthImageLoaders" need-library
+    s" ForthImageExport" need-library
+    s" ForthAstroMetadata" need-library
+    s" ForthFrameTools" need-library
+;
+' load.ForthXISF library-loader ForthXISF
 
-2dup s" BMP" icompare 0= [IF]
-	create BMP
-	NEED ForthAstroFormats
-	NEED ForthRasterIO
-	include "%libdir%\ForthAstroFormats\BMP.f"
-[THEN]
+: load.BMP ( -- )
+    s" ForthAstroFormats" need-library
+    s" ForthRasterIO" need-library
+    s" %libdir%\ForthAstroFormats\BMP.f" included
+;
+' load.BMP library-loader BMP
 
-2dup s" FITS_projection" icompare 0= [IF]
-	create FITS_projection
-	NEED ForthAstroFormats
-	NEED ForthAtomicFile
-	include "%libdir%\ForthAstroFormats\FITS_projection.f"
-[THEN]
+: load.FITS_projection ( -- )
+    s" ForthAstroFormats" need-library
+    s" ForthAtomicFile" need-library
+    s" %libdir%\ForthAstroFormats\FITS_projection.f" included
+;
+' load.FITS_projection library-loader FITS_projection
 
-2dup s" ForthXML" icompare 0= [IF]
-	create ForthXML
-	include "%libdir%\ForthXML\xml.f"
-	include "%libdir%\ForthXML\xml_maptools.f"
-[THEN]
+: load.ForthXML ( -- )
+    s" %libdir%\ForthXML\xml.f" included
+    s" %libdir%\ForthXML\xml_maptools.f" included
+;
+' load.ForthXML library-loader ForthXML
 
-2dup s" ForthPegasusAstro" icompare 0= [IF]
-	create ForthPegasusAstro
-	include "%libdir%\ForthPegasusAstro\PegasusAstro.f"
-[THEN]
+: load.ForthPegasusAstro ( -- )
+    s" %libdir%\ForthPegasusAstro\PegasusAstro.f" included
+;
+' load.ForthPegasusAstro library-loader ForthPegasusAstro
 
-2dup s" ImageAnalysis" icompare 0= [IF]
-	create ImageAnalysis
-	include "%libdir%\ImageAnalysis\ImageAnalysis.f"
-    include "%libdir%\ImageAnalysis\ImageAnalysis_export.f"
-	include "%libdir%\ImageAnalysis\DisplayFunction.f"	
-[THEN]
+: load.ImageAnalysis ( -- )
+    s" %libdir%\ImageAnalysis\ImageAnalysis.f" included
+    s" %libdir%\ImageAnalysis\ImageAnalysis_export.f" included
+    s" %libdir%\ImageAnalysis\DisplayFunction.f" included
+;
+' load.ImageAnalysis library-loader ImageAnalysis
 
-2dup s" simple-tester" icompare 0= [IF]
-	create simple-tester
-	include "%libdir%\simple-tester\simple-tester.f"
-[THEN]
+: load.simple-tester ( -- )
+    s" %libdir%\simple-tester\simple-tester.f" included
+;
+' load.simple-tester library-loader simple-tester
 
-2dup s" Forth10Micron" icompare 0= [IF]
-	create Forth10Micron
-	include "%libdir%\Forth10Micron\10Micron_SDK.f"
-	include "%libdir%\Forth10Micron\10Micron_SDK_extend.f"
-	include "%libdir%\Forth10Micron\10Micron_SDK_commands.f"
-	include "%libdir%\Forth10Micron\ForthTelescopeMount.f"
-	include "%libdir%\Forth10Micron\ForthTelescopeMountMaps.f"
-[THEN]
+: load.Forth10Micron ( -- )
+    s" %libdir%\Forth10Micron\10Micron_SDK.f" included
+    s" %libdir%\Forth10Micron\10Micron_SDK_extend.f" included
+    s" %libdir%\Forth10Micron\10Micron_SDK_commands.f" included
+    s" %libdir%\Forth10Micron\ForthTelescopeMount.f" included
+    s" %libdir%\Forth10Micron\ForthTelescopeMountMaps.f" included
+;
+' load.Forth10Micron library-loader Forth10Micron
 
-2dup s" ForthVT100" icompare 0= [IF]
-	create ForthVT100
-	include "%libdir%\ForthVT100\ForthVT100.f"
-	include "%libdir%\ForthVT100\ForthVT100_tables.f"
-	include "%libdir%\ForthVT100\ForthVT100_UI.f"
-[THEN]
+: load.ForthVT100 ( -- )
+    s" %libdir%\ForthVT100\ForthVT100.f" included
+    s" %libdir%\ForthVT100\ForthVT100_tables.f" included
+    s" %libdir%\ForthVT100\ForthVT100_UI.f" included
+;
+' load.ForthVT100 library-loader ForthVT100
 
-2dup s" ForthASTAPFocus" icompare 0= [IF]
-	create ForthASTAPFocus
-	include "%libdir%\ForthASTAP\ForthASTAPFocus.f"
-[THEN]
+: load.ForthASTAPFocus ( -- )
+    s" %libdir%\ForthASTAP\ForthASTAPFocus.f" included
+;
+' load.ForthASTAPFocus library-loader ForthASTAPFocus
 
-2dup s" ForthASTAP" icompare 0= [IF]
-	create ForthASTAP
-	NEED ForthASTAPFocus
-	include "%libdir%\ForthASTAP\ForthASTAP.f"
-[THEN]
+: load.ForthASTAP ( -- )
+    s" ForthASTAPFocus" need-library
+    s" %libdir%\ForthASTAP\ForthASTAP.f" included
+;
+' load.ForthASTAP library-loader ForthASTAP
 
-2dup s" ForthSeiza" icompare 0= [IF]
-	create ForthSeiza
-	include "%libdir%\ForthSeiza\ForthSeiza.f"
-[THEN]
+: load.ForthSeiza ( -- )
+    s" %libdir%\ForthSeiza\ForthSeiza.f" included
+;
+' load.ForthSeiza library-loader ForthSeiza
 
-2dup s" ForthAstroSolver" icompare 0= [IF]
-	create ForthAstroSolver
-	include "%libdir%\ForthAstroFormats\Solver.f"
-[THEN]
+: load.ForthAstroSolver ( -- )
+    s" %libdir%\ForthAstroFormats\Solver.f" included
+;
+' load.ForthAstroSolver library-loader ForthAstroSolver
 
-2dup s" AstroImagingInForth" icompare 0= [IF]
-	create AstroImagingInForth
-	include "%libdir%\AstroImagingInForth\capabilities\AstroImagingInForth.f"
-[THEN]
+: load.AstroImagingInForth ( -- )
+    s" %libdir%\AstroImagingInForth\capabilities\AstroImagingInForth.f" included
+;
+' load.AstroImagingInForth library-loader AstroImagingInForth
 
-2dup s" ImagingPipeline" icompare 0= [IF]
-	create ImagingPipeline
-	include "%libdir%\AstroImagingInForth\capabilities\ImagingPipeline.f"
-[THEN]
+: load.ImagingPipeline ( -- )
+    s" %libdir%\AstroImagingInForth\capabilities\ImagingPipeline.f" included
+;
+' load.ImagingPipeline library-loader ImagingPipeline
 
-2dup s" AstroImagingFocus" icompare 0= [IF]
-	create AstroImagingFocus
-	include "%libdir%\AstroImagingInForth\capabilities\AstroImagingFocus.f"
-[THEN]
+: load.AstroImagingFocus ( -- )
+    s" %libdir%\AstroImagingInForth\capabilities\AstroImagingFocus.f" included
+;
+' load.AstroImagingFocus library-loader AstroImagingFocus
 
-2dup s" AstroImagingModel" icompare 0= [IF]
-	create AstroImagingModel
-	include "%libdir%\AstroImagingInForth\capabilities\AstroImagingModel.f"
-[THEN]
+: load.AstroImagingModel ( -- )
+    s" %libdir%\AstroImagingInForth\capabilities\AstroImagingModel.f" included
+;
+' load.AstroImagingModel library-loader AstroImagingModel
 
-2dup s" FocuserMetrology" icompare 0= [IF]
-	create FocuserMetrology
-	include "%libdir%\AstroImagingInForth\capabilities\FocuserMetrology.f"
-[THEN]
+: load.FocuserMetrology ( -- )
+    s" %libdir%\AstroImagingInForth\capabilities\FocuserMetrology.f" included
+;
+' load.FocuserMetrology library-loader FocuserMetrology
 
-2dup s" regex" icompare 0= [IF]
-    create regex
-    include "%libdir%\ForthBase\regex\regex.f"
-[THEN]
-
-2drop
-		
-\ as presently coded there is no error message or warning if a requested library cannot be found
+: load.regex ( -- )
+    s" %libdir%\ForthBase\regex\regex.f" included
+;
+' load.regex library-loader regex

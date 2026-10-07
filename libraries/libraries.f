@@ -17,18 +17,41 @@ create libraries
  TEXTMACRO: libdir
  include "%idir%\local.f"
 
-: need ( <name> -- caddr u | )
-\ include the library <name> or do nothing if it has already been included
-	BL PARSE-WORD 		  ( caddr u)
-	2dup search-context ( caddr u xt +/-1 | caddr u 0)
-	if
-		drop 2drop
-	else
-		s" %libdir%\ForthBase\libraries\manifest.f" included
-	then
+wordlist constant library-registry
+
+: library-loader ( loader-xt "<name>" -- )
+\ A registry entry owns both its load action and its one-time loaded flag.
+    create 0 , ,
+    does> dup @ if
+        drop
+    else
+        -1 over !
+        cell+ @ execute
+    then
 ;
+
+: need-library ( caddr u -- )
+\ Existing public words still count as already loaded for compatibility.
+    2dup search-context if
+        drop 2drop
+        exit
+    then
+    library-registry search-wordlist
+    dup 0= abort" Unknown library"
+    drop execute
+;
+
+: need ( "<name>" -- )
+    BL parse-word need-library
+;
+
+get-current
+library-registry set-current
+get-order library-registry swap 1+ set-order
+include "%libdir%\ForthBase\libraries\manifest.f"
+previous
+set-current
 
 [THEN]
 		
 		
-
