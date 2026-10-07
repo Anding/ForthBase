@@ -100,22 +100,46 @@
 	include "%libdir%\ForthKMTronic\KMTronic.f"
 [THEN]
 
+2dup s" ForthAstroFormats" icompare 0= [IF]
+	create ForthAstroFormats
+	include "%libdir%\ForthXISF\Frame.f"
+	include "%libdir%\ForthXISF\FITS.f"
+	include "%libdir%\ForthXISF\FITS_cards.f"
+[THEN]
+
+2dup s" ForthXISFCodec" icompare 0= [IF]
+	create ForthXISFCodec
+	NEED ForthAstroFormats
+	include "%libdir%\ForthXISF\XISF.f"
+[THEN]
+
+2dup s" ForthImageLoaders" icompare 0= [IF]
+	create ForthImageLoaders
+	NEED ForthXISFCodec
+	include "%libdir%\ForthXISF\XISF_load.f"
+	include "%libdir%\ForthXISF\FITS_load.f"
+[THEN]
+
+2dup s" ForthImageExport" icompare 0= [IF]
+	create ForthImageExport
+	NEED ForthXISFCodec
+	include "%libdir%\ForthXISF\PNG.f"
+	include "%libdir%\ForthXISF\RAW.f"
+[THEN]
+
 2dup s" ForthXISF" icompare 0= [IF]
 	create ForthXISF
-	include "%libdir%\ForthXISF\XISF.f"
-	include "%libdir%\ForthXISF\FITS.f"
+	NEED ForthImageLoaders
+	NEED ForthImageExport
 	include "%libdir%\ForthXISF\properties_obs.f"
 	include "%libdir%\ForthXISF\properties_rig.f"		
 	include "%libdir%\ForthXISF\XISF_maps.f"
-	include "%libdir%\ForthXISF\XISF_load.f"
-	include "%libdir%\ForthXISF\FITS_load.f"
 	include "%libdir%\ForthXISF\XISF_spawn.f"	
-	include "%libdir%\ForthXISF\PNG.f"
-	include "%libdir%\ForthXISF\RAW.f"				
 [THEN]
 
 2dup s" BMP" icompare 0= [IF]
 	create BMP
+	NEED ForthXISFCodec
 	include "%libdir%\ForthXISF\BMP.f"
 [THEN]
 
@@ -168,6 +192,11 @@
 	include "%libdir%\ForthASTAP\ForthASTAP.f"
 [THEN]
 
+2dup s" ForthSeiza" icompare 0= [IF]
+	create ForthSeiza
+	include "%libdir%\ForthSeiza\ForthSeiza.f"
+[THEN]
+
 2dup s" regex" icompare 0= [IF]
     create regex
     include "%libdir%\ForthBase\regex\regex.f"
@@ -176,6 +205,3 @@
 2drop
 		
 \ as presently coded there is no error message or warning if a requested library cannot be found
-
-
-
