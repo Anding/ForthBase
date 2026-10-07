@@ -107,6 +107,16 @@
 	include "%libdir%\ForthAstroFormats\FITS_cards.f"
 [THEN]
 
+2dup s" ForthRasterIO" icompare 0= [IF]
+	create ForthRasterIO
+	include "%libdir%\ForthAstroFormats\RasterIO.f"
+[THEN]
+
+2dup s" ForthAtomicFile" icompare 0= [IF]
+	create ForthAtomicFile
+	include "%libdir%\ForthAstroFormats\AtomicFile.f"
+[THEN]
+
 2dup s" ForthXISFCodec" icompare 0= [IF]
 	create ForthXISFCodec
 	NEED ForthAstroFormats
@@ -122,7 +132,8 @@
 
 2dup s" ForthImageExport" icompare 0= [IF]
 	create ForthImageExport
-	NEED ForthXISFCodec
+	NEED ForthAstroFormats
+	NEED ForthRasterIO
 	include "%libdir%\ForthAstroFormats\PNG.f"
 	include "%libdir%\ForthAstroFormats\RAW.f"
 [THEN]
@@ -151,12 +162,15 @@
 
 2dup s" BMP" icompare 0= [IF]
 	create BMP
-	NEED ForthXISFCodec
+	NEED ForthAstroFormats
+	NEED ForthRasterIO
 	include "%libdir%\ForthAstroFormats\BMP.f"
 [THEN]
 
 2dup s" FITS_projection" icompare 0= [IF]
 	create FITS_projection
+	NEED ForthAstroFormats
+	NEED ForthAtomicFile
 	include "%libdir%\ForthAstroFormats\FITS_projection.f"
 [THEN]
 
