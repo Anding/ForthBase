@@ -249,6 +249,11 @@
 	include "%libdir%\AstroImagingInForth\scripts\script-model.f"
 [THEN]
 
+2dup s" FocuserMetrology" icompare 0= [IF]
+	create FocuserMetrology
+	include "%libdir%\AstroImagingInForth\scripts\script-focuser-metrology.f"
+[THEN]
+
 2dup s" GeneratedModelPoints" icompare 0= [IF]
 	create GeneratedModelPoints
 	include "%libdir%\AstroImagingInForth\scripts\GeneratedModelPoints.f"
