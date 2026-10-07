@@ -229,6 +229,31 @@
 	include "%libdir%\ForthSeiza\ForthSeiza.f"
 [THEN]
 
+2dup s" AstroImagingInForth" icompare 0= [IF]
+	create AstroImagingInForth
+	include "%libdir%\AstroImagingInForth\scripts\AstroImagingInForth.f"
+[THEN]
+
+2dup s" ImagingPipeline" icompare 0= [IF]
+	create ImagingPipeline
+	include "%libdir%\AstroImagingInForth\scripts\ImagingPipeline.f"
+[THEN]
+
+2dup s" AstroImagingFocus" icompare 0= [IF]
+	create AstroImagingFocus
+	include "%libdir%\AstroImagingInForth\scripts\script-focus.f"
+[THEN]
+
+2dup s" AstroImagingModel" icompare 0= [IF]
+	create AstroImagingModel
+	include "%libdir%\AstroImagingInForth\scripts\script-model.f"
+[THEN]
+
+2dup s" GeneratedModelPoints" icompare 0= [IF]
+	create GeneratedModelPoints
+	include "%libdir%\AstroImagingInForth\scripts\GeneratedModelPoints.f"
+[THEN]
+
 2dup s" regex" icompare 0= [IF]
     create regex
     include "%libdir%\ForthBase\regex\regex.f"
