@@ -77,6 +77,13 @@ END-CODE
 \ *****************************************************************************
 \ string convenience functions
 
+: despace ( c-addr u -- )
+\ Replace spaces in writable string storage with underscores in place.
+    over + swap ?do
+        i c@ bl = if '_' i c! then
+    loop
+;
+
 synonym $! place ( caddr u addr --) 
 \ copy a string into memory at addr in counted string format
 

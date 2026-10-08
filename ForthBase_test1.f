@@ -59,6 +59,11 @@ T{ $0123 twist2 }T $2301 ==
 T{ $abcf twist2 }T $cfab ==
 CR ." strings" CR
 
+create spaced-name 16 allot
+s" Alpha Beta" spaced-name place
+spaced-name count despace
+T{ spaced-name count hashS }T s" Alpha_Beta" hashS ==
+
 s" Hadrian" $value emperor
 
 T{ emperor hashS }T s" Hadrian" hashS ==
