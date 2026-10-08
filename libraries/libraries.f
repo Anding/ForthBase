@@ -24,21 +24,26 @@ wordlist constant library-registry
 \ wordlist. It is exposed as a constant for diagnostics but is not left in the
 \ normal search order.
 
+: run-library-loader { body | ior -- }
+\ Mark before execution to break dependency cycles, but restore the unloaded
+\ state when an include throws so an interactive session can retry.
+    body @ if exit then
+    -1 body !
+    body cell+ @ catch -> ior
+    ior if
+        0 body !
+        ior throw
+    then
+;
+
 : library-loader ( loader-xt "<name>" -- )
 \ Define a registry entry with body layout:
 \   cell 0: loaded flag
 \   cell 1: loader execution token
-\ Set the flag before executing the action. This breaks recursive dependency
-\ cycles in the same way that the former manifest created its marker before
-\ including files. If loading throws, the entry remains marked for this
-\ session; fix the cause and restart VFX before retrying.
+\ run-library-loader sets the flag before the action to break cycles and clears
+\ it if the action throws.
     create 0 , ,
-    does> dup @ if
-        drop
-    else
-        -1 over !
-        cell+ @ execute
-    then
+    does> run-library-loader
 ;
 
 : need-library ( caddr u -- )

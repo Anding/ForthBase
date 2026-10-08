@@ -24,8 +24,9 @@ For `NEED Name`:
 
 Dependencies are ordinary loader calls and therefore receive the same
 one-time behaviour. A loader is marked before its action executes, preventing
-recursive dependency cycles. If an include throws, restart VFX after fixing
-the cause because that entry remains marked for the current session.
+recursive dependency cycles. If an include throws, the loaded flag is cleared
+before the exception is rethrown, so the request can be retried after fixing
+the cause.
 
 `NEED` parses the next source word and is intended for source loading. Code
 which already has a library name as a string may use:
@@ -114,4 +115,4 @@ ForthBase\libraries\libraries_test1.f
 ```
 
 It covers registry lookup, recursive dependency loading, one-time execution,
-and explicit failure for an unknown name.
+retry after loader failure, and explicit failure for an unknown name.
