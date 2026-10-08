@@ -117,6 +117,11 @@
 ;
 ' load.ForthAstroFormats library-loader ForthAstroFormats
 
+: load.ForthAstroPaths ( -- )
+    s" %libdir%\ForthAstroFormats\Paths.f" included
+;
+' load.ForthAstroPaths library-loader ForthAstroPaths
+
 : load.ForthRasterIO ( -- )
     s" %libdir%\ForthAstroFormats\RasterIO.f" included
 ;
