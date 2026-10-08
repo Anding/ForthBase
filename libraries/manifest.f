@@ -89,6 +89,12 @@
 ;
 ' load.ForthAstroCalc library-loader ForthAstroCalc
 
+: load.SkyRegions ( -- )
+    s" AstroCalc" need-library
+    s" %libdir%\AstroCalc\ForthAstroCalc\SkyRegions.f" included
+;
+' load.SkyRegions library-loader SkyRegions
+
 : load.ForthEAF ( -- )
     s" %libdir%\ForthEAF\EAF_SDK.f" included
     s" %libdir%\ForthEAF\EAF_SDK_extend.f" included
@@ -253,6 +259,12 @@
     s" %libdir%\AstroImagingInForth\capabilities\AstroImagingInForth.f" included
 ;
 ' load.AstroImagingInForth library-loader AstroImagingInForth
+
+: load.AstroImagingTargets ( -- )
+    s" SkyRegions" need-library
+    s" %libdir%\AstroImagingInForth\capabilities\AstroImagingTargets.f" included
+;
+' load.AstroImagingTargets library-loader AstroImagingTargets
 
 : load.ImagingPipeline ( -- )
     s" %libdir%\AstroImagingInForth\capabilities\ImagingPipeline.f" included
