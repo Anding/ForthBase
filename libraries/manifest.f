@@ -1,5 +1,16 @@
 \ Private loader dictionary used by NEED. Each action keeps nonuniform paths
 \ and dependencies explicit; library-loader supplies one-time execution.
+\
+\ Maintenance pattern for every public library name:
+\   : load.Name ( -- )
+\       s" Dependency" need-library
+\       s" %libdir%\repository\source.f" included
+\   ;
+\   ' load.Name library-loader Name
+\
+\ Dependencies use need-library rather than parsed NEED because these actions
+\ execute later, after the manifest has compiled. Registration order is not
+\ dependency order: the complete registry exists before any loader is called.
 
 : load.TestWord1 ( -- )
     s" %libdir%\ForthBase\libraries\Test1.f" included
