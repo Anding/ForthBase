@@ -215,6 +215,7 @@
 ' load.ForthPegasusAstro library-loader ForthPegasusAstro
 
 : load.ImageAnalysis ( -- )
+    s" ForthPublication" need-library
     s" %libdir%\ImageAnalysis\ImageAnalysis.f" included
     s" %libdir%\ImageAnalysis\ImageAnalysis_export.f" included
     s" %libdir%\ImageAnalysis\DisplayFunction.f" included
