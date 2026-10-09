@@ -203,6 +203,14 @@
 ;
 ' load.FITS_projection library-loader FITS_projection
 
+: load.ForthPreview ( -- )
+    s" ImageAnalysis" need-library
+    s" BMP" need-library
+    s" ForthPublication" need-library
+    s" %libdir%\ForthAstroFormats\Preview.f" included
+;
+' load.ForthPreview library-loader ForthPreview
+
 : load.ForthXML ( -- )
     s" %libdir%\ForthXML\xml.f" included
     s" %libdir%\ForthXML\xml_maptools.f" included
@@ -215,9 +223,7 @@
 ' load.ForthPegasusAstro library-loader ForthPegasusAstro
 
 : load.ImageAnalysis ( -- )
-    s" ForthPublication" need-library
     s" %libdir%\ImageAnalysis\ImageAnalysis.f" included
-    s" %libdir%\ImageAnalysis\ImageAnalysis_export.f" included
     s" %libdir%\ImageAnalysis\DisplayFunction.f" included
 ;
 ' load.ImageAnalysis library-loader ImageAnalysis
