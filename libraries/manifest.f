@@ -118,13 +118,14 @@
 
 : load.ForthAstroFormats ( -- )
     s" %libdir%\ForthAstroFormats\Frame.f" included
+    s" %libdir%\ForthAstroFormats\Paths.f" included
     s" %libdir%\ForthAstroFormats\FITS.f" included
     s" %libdir%\ForthAstroFormats\FITS_cards.f" included
 ;
 ' load.ForthAstroFormats library-loader ForthAstroFormats
 
 : load.ForthAstroPaths ( -- )
-    s" %libdir%\ForthAstroFormats\Paths.f" included
+    s" ForthAstroFormats" need-library
 ;
 ' load.ForthAstroPaths library-loader ForthAstroPaths
 
@@ -137,6 +138,13 @@
     s" %libdir%\ForthAstroFormats\AtomicFile.f" included
 ;
 ' load.ForthAtomicFile library-loader ForthAtomicFile
+
+: load.ForthPublication ( -- )
+    s" ForthAstroFormats" need-library
+    s" ForthAtomicFile" need-library
+    s" %libdir%\ForthAstroFormats\Publication.f" included
+;
+' load.ForthPublication library-loader ForthPublication
 
 : load.ForthXISFCodec ( -- )
     s" ForthAstroFormats" need-library
@@ -190,7 +198,7 @@
 
 : load.FITS_projection ( -- )
     s" ForthAstroFormats" need-library
-    s" ForthAtomicFile" need-library
+    s" ForthPublication" need-library
     s" %libdir%\ForthAstroFormats\FITS_projection.f" included
 ;
 ' load.FITS_projection library-loader FITS_projection
