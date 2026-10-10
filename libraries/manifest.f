@@ -296,6 +296,11 @@
 ;
 ' load.AstroImagingModel library-loader AstroImagingModel
 
+: load.LightboxFlats ( -- )
+    s" %libdir%\AstroImagingInForth\capabilities\LightboxFlats.f" included
+;
+' load.LightboxFlats library-loader LightboxFlats
+
 : load.FocuserMetrology ( -- )
     s" %libdir%\AstroImagingInForth\capabilities\FocuserMetrology.f" included
 ;
