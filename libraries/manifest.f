@@ -296,6 +296,7 @@
 ;
 ' load.AstroImagingModel library-loader AstroImagingModel
 
+\ Capability loaders name the stable public vocabulary, not a device driver.
 : load.LightboxFlats ( -- )
     s" %libdir%\AstroImagingInForth\capabilities\LightboxFlats.f" included
 ;
