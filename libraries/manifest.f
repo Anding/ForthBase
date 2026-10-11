@@ -246,6 +246,7 @@
     s" %libdir%\ForthVT100\ForthVT100.f" included
     s" %libdir%\ForthVT100\ForthVT100_tables.f" included
     s" %libdir%\ForthVT100\ForthVT100_UI.f" included
+    s" %libdir%\ForthVT100\ForthLog.f" included
 ;
 ' load.ForthVT100 library-loader ForthVT100
 
