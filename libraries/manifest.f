@@ -95,6 +95,18 @@
 ;
 ' load.SkyRegions library-loader SkyRegions
 
+: load.HorizonMasks ( -- )
+    s" SkyRegions" need-library
+    s" %libdir%\AstroCalc\ForthAstroCalc\HorizonMasks.f" included
+;
+' load.HorizonMasks library-loader HorizonMasks
+
+: load.TargetLists ( -- )
+    s" HorizonMasks" need-library
+    s" %libdir%\AstroCalc\ForthAstroCalc\TargetLists.f" included
+;
+' load.TargetLists library-loader TargetLists
+
 : load.ForthEAF ( -- )
     s" %libdir%\ForthEAF\EAF_SDK.f" included
     s" %libdir%\ForthEAF\EAF_SDK_extend.f" included
@@ -277,7 +289,7 @@
 ' load.AstroImagingInForth library-loader AstroImagingInForth
 
 : load.AstroImagingTargets ( -- )
-    s" SkyRegions" need-library
+    s" TargetLists" need-library
     s" %libdir%\AstroImagingInForth\capabilities\AstroImagingTargets.f" included
 ;
 ' load.AstroImagingTargets library-loader AstroImagingTargets
