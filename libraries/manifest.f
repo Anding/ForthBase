@@ -27,6 +27,11 @@
 ;
 ' load.ForthBase library-loader ForthBase
 
+: load.structured-lists ( -- )
+    s" %libdir%\ForthBase\structured-lists\structured-lists.f" included
+;
+' load.structured-lists library-loader structured-lists
+
 : load.AstroCalc ( -- )
     s" %libdir%\AstroCalc\ForthAstroCalc\ForthAstroCalc.f" included
 ;
