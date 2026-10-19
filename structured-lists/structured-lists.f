@@ -4,9 +4,11 @@
 \ No dictionary allocation may be interleaved with list construction.
 \ Zero is reserved for the terminator; records may belong to multiple lists.
 \
-\ Callbacks consume their supplied record references and return one flag,
-\ preserving any underlying context cells. They must not alter the list being
-\ traversed; LIST-FROM predicates must not allocate dictionary storage.
+\ Supplied predicates and comparison words consume record references and
+\ return one flag, preserving any underlying context cells. Here, context
+\ means any number of caller-supplied stack values, including none.
+\ These words must not alter the list being traversed; LIST-FROM predicates
+\ must not allocate dictionary storage.
 \ Only ITEM-NAME depends on VFX's dictionary representation.
 
 : ITEM-NAME { ref | xt nfa -- caddr u }
@@ -37,8 +39,10 @@
 
 : SORT-LIST { compare list | current position -- }
 \ ( context xt list -- context )
-\ compare ( context item1 item2 -- context flag ): true when item1
-\ belongs before or equal to item2, in the requested top-to-bottom order.
+\ xt is the execution token of the comparison word:
+\ ( context item1 item2 -- context flag )
+\ Return true when item1 belongs before or equal to item2, in the requested
+\ top-to-bottom order.
 \ Stable in-place insertion sort using adjacent swaps; no result buffer.
     list @ 0= if exit then
     list cell+ to current
@@ -59,7 +63,9 @@
 
 : QUERY-LIST { predicate list -- }
 \ ( context xt list -- context ref|0 )
-\ predicate ( context item -- context flag ).
+\ xt is the execution token of the predicate:
+\ ( context item -- context flag )
+\ Return the first reference for which the predicate is true, or 0 if none.
     begin list @ while
         list @ predicate execute if list @ exit then
         list cell+ to list
@@ -69,7 +75,8 @@
 
 : LIST-FROM { predicate list -- }
 \ ( context xt list <name> -- context )
-\ Define a new list of references satisfying the QUERY-LIST predicate.
+\ xt is the execution token of a predicate with the same stack effect as
+\ in QUERY-LIST. Define <name> to return a new list of matching references.
 \ Preserve source order and duplicates; records and source list are unchanged.
     create
     begin list @ while
