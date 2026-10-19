@@ -100,14 +100,8 @@
 ;
 ' load.SkyRegions library-loader SkyRegions
 
-: load.HorizonMasks ( -- )
-    s" SkyRegions" need-library
-    s" %libdir%\AstroCalc\ForthAstroCalc\HorizonMasks.f" included
-;
-' load.HorizonMasks library-loader HorizonMasks
-
 : load.TargetLists ( -- )
-    s" HorizonMasks" need-library
+    s" AstroCalc" need-library
     s" %libdir%\AstroCalc\ForthAstroCalc\TargetLists.f" included
 ;
 ' load.TargetLists library-loader TargetLists
