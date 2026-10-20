@@ -5,7 +5,7 @@ public form is:
 
 ```forth
 NEED ForthAstroFormats
-NEED forth-map
+NEED ordered-maps
 ```
 
 Names are resolved in the private `library-registry` wordlist. Each registry

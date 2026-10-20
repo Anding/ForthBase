@@ -80,12 +80,6 @@
 ;
 ' load.Windows library-loader Windows
 
-: load.Forth-map ( -- )
-    s" %libdir%\forth-map\map.fs" included
-    s" %libdir%\forth-map\map-tools.fs" included
-;
-' load.Forth-map library-loader Forth-map
-
 : load.ForthASI ( -- )
     s" %libdir%\ForthASI\ForthASI\ASI_SDK.f" included
     s" %libdir%\ForthASI\ForthASI\ASI_SDK_extend.f" included

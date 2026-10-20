@@ -3,6 +3,12 @@
 Reusable Forth language definitions and the library loader used by the related
 Forth repositories.
 
+`NEED ordered-maps` supplies heap-backed, insertion-ordered string maps.
+See [`ordered-maps/ordered-maps.f`](ordered-maps/ordered-maps.f) for usage,
+the wordset, and storage invariants. `erase-map` removes keys; `reset-map`
+retains keys and order while emptying values. The legacy map library is no
+longer registered by the loader.
+
 See [`libraries/README.md`](libraries/README.md) for the `NEED` user guide,
 including registration and dependency instructions.
 
