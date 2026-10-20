@@ -100,17 +100,16 @@ synonym $@ count ( addr -- caddr u)
     then
 ;
 
-\ compute a hash h1 by hashing x1 and h0
-\ 	borrowed from simple-tester and used in scanning a .wcs file
+\ 32-bit FNV-1a mixing step, shared with simple-tester.
 : hash ( x1 h0 -- h1)
-	31 * swap 13 + xor
-;	
+    xor $01000193 * $ffffffff and
+;
 	
 \ 32-bit FNV-1a; reserve zero for unused map records by mapping it to one.
 : hash$ { c-addr u -- h }
     $811c9dc5
     u 0 ?do
-        c-addr i + c@ xor $01000193 *
+        c-addr i + c@ swap hash
     loop
     dup 0= -
 ;

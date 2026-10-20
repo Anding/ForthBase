@@ -8,6 +8,8 @@ create hash-zero-vector $cc c, $24 c, $31 c, $c4 c,
 
 Tstart
 
+T{ 'a' $811c9dc5 hash }T $e40c292c ==
+T{ $c4 $c4 hash }T 0 ==
 T{ 0 0 hash$ }T $811c9dc5 ==
 T{ s" a" hash$ }T $e40c292c ==
 T{ s" foobar" hash$ }T $bf9cf968 ==
