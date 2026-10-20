@@ -32,6 +32,11 @@
 ;
 ' load.structured-lists library-loader structured-lists
 
+: load.ordered-maps ( -- )
+    s" %libdir%\ForthBase\ordered-maps\ordered-maps.f" included
+;
+' load.ordered-maps library-loader ordered-maps
+
 : load.AstroCalc ( -- )
     s" %libdir%\AstroCalc\ForthAstroCalc\ForthAstroCalc.f" included
 ;

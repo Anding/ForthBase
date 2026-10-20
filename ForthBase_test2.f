@@ -3,7 +3,15 @@
 need forthBase
 need simple-tester
 
+\ This four-byte FNV-1a preimage hashes to zero before the nonzero mapping.
+create hash-zero-vector $cc c, $24 c, $31 c, $c4 c,
+
 Tstart
+
+T{ 0 0 hash$ }T $811c9dc5 ==
+T{ s" a" hash$ }T $e40c292c ==
+T{ s" foobar" hash$ }T $bf9cf968 ==
+T{ hash-zero-vector 4 hash$ }T 1 ==
 
 s" First" $value my$value
 T{ my$value hashS }T s" First" hashS ==

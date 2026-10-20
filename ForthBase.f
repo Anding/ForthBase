@@ -106,12 +106,13 @@ synonym $@ count ( addr -- caddr u)
 	31 * swap 13 + xor
 ;	
 	
-\ hash a string to a single value on stack
-: hash$ ( c-addr u -- h)
-	swap 2dup + swap ( u end+1 start)
-	?do											\ Let h0 = u
-		i c@ ( h_i x) swap hash ( h_j) 	\ j = i + 1
-	loop
+\ 32-bit FNV-1a; reserve zero for unused map records by mapping it to one.
+: hash$ { c-addr u -- h }
+    $811c9dc5
+    u 0 ?do
+        c-addr i + c@ xor $01000193 *
+    loop
+    dup 0= -
 ;
 
 : toInteger ( caddr u -- n)
