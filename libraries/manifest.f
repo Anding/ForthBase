@@ -220,6 +220,7 @@
     s" %libdir%\AstroImagingInForth\capabilities\ImagingPipeline.f" included
     s" %libdir%\AstroImagingInForth\capabilities\Autofocus.f" included
     s" %libdir%\AstroImagingInForth\capabilities\MountModel.f" included
+    s" %libdir%\AstroImagingInForth\scripts\DefaultModelPoints.f" included
     s" %libdir%\AstroImagingInForth\capabilities\FocuserModel.f" included
     s" %libdir%\AstroImagingInForth\capabilities\LightboxFlats.f" included
 ;
