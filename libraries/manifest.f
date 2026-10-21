@@ -19,6 +19,7 @@
 
 : load.ForthBase ( -- )
     s" %libdir%\ForthBase\ForthBase.f" included
+    s" %libdir%\ForthBase\Input.f" included
 ;
 ' load.ForthBase library-loader ForthBase
 

@@ -34,4 +34,32 @@ T{ <$ s" This is" $ BL _ s" a string" $ '!' _ $> hashS }T s" This is a string!" 
 : inside02 <$ s" This is" $ BL _ s" a string" $ '!' _ $> ;
 T{ inside02 hashS }T s" This is a string!" hashS ==
 
+\ Decimal parsing rejects signs, suffixes and values outside a signed cell.
+T{ s" 0" nonnegative-integer? }T 0 -1 ==
+T{ s" 55490" nonnegative-integer? }T 55490 -1 ==
+T{ s" 2147483647" nonnegative-integer? }T 2147483647 -1 ==
+T{ s" " nonnegative-integer? }T 0 ==
+T{ s" -1" nonnegative-integer? }T 0 ==
+T{ s" 12x" nonnegative-integer? }T 0 ==
+T{ s" 2147483648" nonnegative-integer? }T 0 ==
+: invalid-range ( -- ) 11 2 10 check-range ;
+T{ ' invalid-range catch 0<> }T -1 ==
+
+\ Compile the input routine against a finite sequence of mistyped readings.
+0 value input-test-count
+: accept { addr capacity | text u -- u }
+    input-test-count case
+        0 of s" bad" endof
+        1 of s" -1" endof
+        2 of s" 11" endof
+        s" 7" rot
+    endcase -> u -> text
+    text addr u move
+    input-test-count 1+ -> input-test-count
+    u
+;
+include %idir%\Input.f
+T{ 2 10 s" Reading: " read-nonnegative }T 7 ==
+T{ input-test-count }T 4 ==
+
 Tend 
