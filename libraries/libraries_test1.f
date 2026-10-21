@@ -25,7 +25,17 @@ NEED simple-tester
 
 get-current
 library-registry set-current
+get-order library-registry swap 1+ set-order
+: load.TestWord1 ( -- )
+    s" %libdir%\ForthBase\libraries\Test1.f" included
+;
+' load.TestWord1 library-loader TestWord1
+: load.TestWord2 ( -- )
+    s" %libdir%\ForthBase\libraries\Test2.f" included
+;
+' load.TestWord2 library-loader TestWord2
 ' load.retry-test library-loader RetryTest
+previous
 set-current
 
 : request-retry-test ( -- )

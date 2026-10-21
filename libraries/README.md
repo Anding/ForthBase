@@ -97,6 +97,15 @@ Keep nonuniform include order explicit:
 This makes initialization order inspectable and avoids hiding repository
 structure behind another abstraction.
 
+`ForthAstroFormats` and `AstroImagingInForth` each load their source groups
+in dependency order. Existing format-library names delegate to the consolidated
+formats loader, so older callers do not include the same source twice.
+`ImageAnalysis` loads preview writers after its numerical and display words;
+the formats group requests it only after frame and publication words exist.
+`ForthASTAPFocus` remains separate so loading focus support does not select
+ASTAP astrometry. Imaging selects Seiza only while `solve-image` still points
+to `no-solver`.
+
 ## Diagnostics
 
 Check whether a public name is registered:

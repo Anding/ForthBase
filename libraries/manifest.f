@@ -12,15 +12,10 @@
 \ execute later, after the manifest has compiled. Registration order is not
 \ dependency order: the complete registry exists before any loader is called.
 
-: load.TestWord1 ( -- )
-    s" %libdir%\ForthBase\libraries\Test1.f" included
+: load.simple-tester ( -- )
+    s" %libdir%\simple-tester\simple-tester.f" included
 ;
-' load.TestWord1 library-loader TestWord1
-
-: load.TestWord2 ( -- )
-    s" %libdir%\ForthBase\libraries\Test2.f" included
-;
-' load.TestWord2 library-loader TestWord2
+' load.simple-tester library-loader simple-tester
 
 : load.ForthBase ( -- )
     s" %libdir%\ForthBase\ForthBase.f" included
@@ -36,11 +31,6 @@
     s" %libdir%\ForthBase\ordered-maps\ordered-maps.f" included
 ;
 ' load.ordered-maps library-loader ordered-maps
-
-: load.AstroCalc ( -- )
-    s" %libdir%\AstroCalc\ForthAstroCalc\ForthAstroCalc.f" included
-;
-' load.AstroCalc library-loader AstroCalc
 
 : load.Buffers ( -- )
     s" %libdir%\ForthBase\buffers\buffers.f" included
@@ -80,6 +70,19 @@
 ;
 ' load.Windows library-loader Windows
 
+: load.ForthVT100 ( -- )
+    s" %libdir%\ForthVT100\ForthVT100.f" included
+    s" %libdir%\ForthVT100\ForthVT100_tables.f" included
+    s" %libdir%\ForthVT100\ForthVT100_UI.f" included
+    s" %libdir%\ForthVT100\ForthLog.f" included
+;
+' load.ForthVT100 library-loader ForthVT100
+
+: load.regex ( -- )
+    s" %libdir%\ForthBase\regex\regex.f" included
+;
+' load.regex library-loader regex
+
 : load.ForthASI ( -- )
     s" %libdir%\ForthASI\ForthASI\ASI_SDK.f" included
     s" %libdir%\ForthASI\ForthASI\ASI_SDK_extend.f" included
@@ -90,20 +93,10 @@
 
 : load.ForthAstroCalc ( -- )
     s" %libdir%\AstroCalc\ForthAstroCalc\ForthAstroCalc.f" included
-;
-' load.ForthAstroCalc library-loader ForthAstroCalc
-
-: load.SkyRegions ( -- )
-    s" AstroCalc" need-library
     s" %libdir%\AstroCalc\ForthAstroCalc\SkyRegions.f" included
-;
-' load.SkyRegions library-loader SkyRegions
-
-: load.TargetLists ( -- )
-    s" AstroCalc" need-library
     s" %libdir%\AstroCalc\ForthAstroCalc\TargetLists.f" included
 ;
-' load.TargetLists library-loader TargetLists
+' load.ForthAstroCalc library-loader ForthAstroCalc
 
 : load.ForthEAF ( -- )
     s" %libdir%\ForthEAF\EAF_SDK.f" included
@@ -131,95 +124,51 @@
     s" %libdir%\ForthAstroFormats\Paths.f" included
     s" %libdir%\ForthAstroFormats\FITS.f" included
     s" %libdir%\ForthAstroFormats\FITS_cards.f" included
-;
-' load.ForthAstroFormats library-loader ForthAstroFormats
-
-: load.ForthAstroPaths ( -- )
-    s" ForthAstroFormats" need-library
-;
-' load.ForthAstroPaths library-loader ForthAstroPaths
-
-: load.ForthRasterIO ( -- )
-    s" %libdir%\ForthAstroFormats\RasterIO.f" included
-;
-' load.ForthRasterIO library-loader ForthRasterIO
-
-: load.ForthAtomicFile ( -- )
-    s" %libdir%\ForthAstroFormats\AtomicFile.f" included
-;
-' load.ForthAtomicFile library-loader ForthAtomicFile
-
-: load.ForthPublication ( -- )
-    s" ForthAstroFormats" need-library
-    s" ForthAtomicFile" need-library
-    s" %libdir%\ForthAstroFormats\Publication.f" included
-;
-' load.ForthPublication library-loader ForthPublication
-
-: load.ForthXISFCodec ( -- )
-    s" ForthAstroFormats" need-library
     s" %libdir%\ForthAstroFormats\XISF.f" included
-;
-' load.ForthXISFCodec library-loader ForthXISFCodec
-
-: load.ForthImageLoaders ( -- )
-    s" ForthXISFCodec" need-library
     s" %libdir%\ForthAstroFormats\XISF_load.f" included
     s" %libdir%\ForthAstroFormats\FITS_load.f" included
-;
-' load.ForthImageLoaders library-loader ForthImageLoaders
-
-: load.ForthImageExport ( -- )
-    s" ForthAstroFormats" need-library
-    s" ForthRasterIO" need-library
+    s" %libdir%\ForthAstroFormats\RasterIO.f" included
+    s" %libdir%\ForthAstroFormats\AtomicFile.f" included
+    s" %libdir%\ForthAstroFormats\Publication.f" included
+    s" %libdir%\ForthAstroFormats\FITS_projection.f" included
     s" %libdir%\ForthAstroFormats\PNG.f" included
     s" %libdir%\ForthAstroFormats\RAW.f" included
-;
-' load.ForthImageExport library-loader ForthImageExport
-
-: load.ForthAstroMetadata ( -- )
-    s" ForthAstroFormats" need-library
+    s" %libdir%\ForthAstroFormats\BMP.f" included
     s" %libdir%\ForthAstroFormats\properties_obs.f" included
     s" %libdir%\ForthAstroFormats\properties_rig.f" included
     s" %libdir%\ForthAstroFormats\XISF_maps.f" included
-;
-' load.ForthAstroMetadata library-loader ForthAstroMetadata
-
-: load.ForthFrameTools ( -- )
-    s" ForthAstroFormats" need-library
     s" %libdir%\ForthAstroFormats\XISF_spawn.f" included
+    s" %libdir%\ForthAstroFormats\Solver.f" included
+    s" ImageAnalysis" need-library
 ;
-' load.ForthFrameTools library-loader ForthFrameTools
+' load.ForthAstroFormats library-loader ForthAstroFormats
 
 : load.ForthXISF ( -- )
-    s" ForthImageLoaders" need-library
-    s" ForthImageExport" need-library
-    s" ForthAstroMetadata" need-library
-    s" ForthFrameTools" need-library
+    s" ForthAstroFormats" need-library
 ;
 ' load.ForthXISF library-loader ForthXISF
 
-: load.BMP ( -- )
-    s" ForthAstroFormats" need-library
-    s" ForthRasterIO" need-library
-    s" %libdir%\ForthAstroFormats\BMP.f" included
-;
-' load.BMP library-loader BMP
+\ Existing callers share the consolidated loader, not a second set of includes.
+' load.ForthXISF library-loader ForthAstroPaths
+' load.ForthXISF library-loader ForthRasterIO
+' load.ForthXISF library-loader ForthAtomicFile
+' load.ForthXISF library-loader ForthPublication
+' load.ForthXISF library-loader ForthXISFCodec
+' load.ForthXISF library-loader ForthImageLoaders
+' load.ForthXISF library-loader ForthImageExport
+' load.ForthXISF library-loader ForthAstroMetadata
+' load.ForthXISF library-loader ForthFrameTools
+' load.ForthXISF library-loader BMP
+' load.ForthXISF library-loader FITS_projection
+' load.ForthXISF library-loader ForthPreview
+' load.ForthXISF library-loader ForthAstroSolver
 
-: load.FITS_projection ( -- )
-    s" ForthAstroFormats" need-library
-    s" ForthPublication" need-library
-    s" %libdir%\ForthAstroFormats\FITS_projection.f" included
+: load.AstroCalc ( -- )
+    s" ForthAstroCalc" need-library
 ;
-' load.FITS_projection library-loader FITS_projection
-
-: load.ForthPreview ( -- )
-    s" ImageAnalysis" need-library
-    s" BMP" need-library
-    s" ForthPublication" need-library
-    s" %libdir%\ForthAstroFormats\Preview.f" included
-;
-' load.ForthPreview library-loader ForthPreview
+' load.AstroCalc library-loader AstroCalc
+' load.AstroCalc library-loader SkyRegions
+' load.AstroCalc library-loader TargetLists
 
 : load.ForthXML ( -- )
     s" %libdir%\ForthXML\xml.f" included
@@ -235,13 +184,9 @@
 : load.ImageAnalysis ( -- )
     s" %libdir%\ImageAnalysis\ImageAnalysis.f" included
     s" %libdir%\ImageAnalysis\DisplayFunction.f" included
+    s" %libdir%\ForthAstroFormats\Preview.f" included
 ;
 ' load.ImageAnalysis library-loader ImageAnalysis
-
-: load.simple-tester ( -- )
-    s" %libdir%\simple-tester\simple-tester.f" included
-;
-' load.simple-tester library-loader simple-tester
 
 : load.Forth10Micron ( -- )
     s" %libdir%\Forth10Micron\10Micron_SDK.f" included
@@ -252,21 +197,12 @@
 ;
 ' load.Forth10Micron library-loader Forth10Micron
 
-: load.ForthVT100 ( -- )
-    s" %libdir%\ForthVT100\ForthVT100.f" included
-    s" %libdir%\ForthVT100\ForthVT100_tables.f" included
-    s" %libdir%\ForthVT100\ForthVT100_UI.f" included
-    s" %libdir%\ForthVT100\ForthLog.f" included
-;
-' load.ForthVT100 library-loader ForthVT100
-
 : load.ForthASTAPFocus ( -- )
     s" %libdir%\ForthASTAP\ForthASTAPFocus.f" included
 ;
 ' load.ForthASTAPFocus library-loader ForthASTAPFocus
 
 : load.ForthASTAP ( -- )
-    s" ForthASTAPFocus" need-library
     s" %libdir%\ForthASTAP\ForthASTAP.f" included
 ;
 ' load.ForthASTAP library-loader ForthASTAP
@@ -276,49 +212,15 @@
 ;
 ' load.ForthSeiza library-loader ForthSeiza
 
-: load.ForthAstroSolver ( -- )
-    s" %libdir%\ForthAstroFormats\Solver.f" included
-;
-' load.ForthAstroSolver library-loader ForthAstroSolver
-
 : load.AstroImagingInForth ( -- )
     s" %libdir%\AstroImagingInForth\capabilities\AstroImagingInForth.f" included
-;
-' load.AstroImagingInForth library-loader AstroImagingInForth
-
-: load.AstroImagingTargets ( -- )
-    s" TargetLists" need-library
-    s" %libdir%\AstroImagingInForth\capabilities\AstroImagingTargets.f" included
-;
-' load.AstroImagingTargets library-loader AstroImagingTargets
-
-: load.ImagingPipeline ( -- )
+    s" %libdir%\AstroImagingInForth\capabilities\ImagingLog.f" included
+    s" %libdir%\AstroImagingInForth\capabilities\Hardware.f" included
+    s" %libdir%\AstroImagingInForth\capabilities\Targets&Regions.f" included
     s" %libdir%\AstroImagingInForth\capabilities\ImagingPipeline.f" included
-;
-' load.ImagingPipeline library-loader ImagingPipeline
-
-: load.AstroImagingFocus ( -- )
-    s" %libdir%\AstroImagingInForth\capabilities\AstroImagingFocus.f" included
-;
-' load.AstroImagingFocus library-loader AstroImagingFocus
-
-: load.AstroImagingModel ( -- )
-    s" %libdir%\AstroImagingInForth\capabilities\AstroImagingModel.f" included
-;
-' load.AstroImagingModel library-loader AstroImagingModel
-
-\ Capability loaders name the stable public vocabulary, not a device driver.
-: load.LightboxFlats ( -- )
+    s" %libdir%\AstroImagingInForth\capabilities\Autofocus.f" included
+    s" %libdir%\AstroImagingInForth\capabilities\MountModel.f" included
+    s" %libdir%\AstroImagingInForth\capabilities\FocuserModel.f" included
     s" %libdir%\AstroImagingInForth\capabilities\LightboxFlats.f" included
 ;
-' load.LightboxFlats library-loader LightboxFlats
-
-: load.FocuserMetrology ( -- )
-    s" %libdir%\AstroImagingInForth\capabilities\FocuserMetrology.f" included
-;
-' load.FocuserMetrology library-loader FocuserMetrology
-
-: load.regex ( -- )
-    s" %libdir%\ForthBase\regex\regex.f" included
-;
-' load.regex library-loader regex
+' load.AstroImagingInForth library-loader AstroImagingInForth
