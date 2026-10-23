@@ -130,8 +130,6 @@
     s" %libdir%\ForthAstroFormats\FITS_load.f" included
     s" %libdir%\ForthAstroFormats\RasterIO.f" included
     s" %libdir%\ForthAstroFormats\AtomicFile.f" included
-    s" %libdir%\ForthAstroFormats\Publication.f" included
-    s" %libdir%\ForthAstroFormats\FITS_projection.f" included
     s" %libdir%\ForthAstroFormats\PNG.f" included
     s" %libdir%\ForthAstroFormats\RAW.f" included
     s" %libdir%\ForthAstroFormats\BMP.f" included
@@ -140,7 +138,9 @@
     s" %libdir%\ForthAstroFormats\XISF_maps.f" included
     s" %libdir%\ForthAstroFormats\XISF_spawn.f" included
     s" %libdir%\ForthAstroFormats\Solver.f" included
-    s" ImageAnalysis" need-library
+    s" %libdir%\ImageAnalysis\ImageAnalysis.f" included
+    s" %libdir%\ImageAnalysis\DisplayFunction.f" included
+    s" %libdir%\ForthAstroFormats\Publication.f" included
 ;
 ' load.ForthAstroFormats library-loader ForthAstroFormats
 
@@ -183,9 +183,7 @@
 ' load.ForthPegasusAstro library-loader ForthPegasusAstro
 
 : load.ImageAnalysis ( -- )
-    s" %libdir%\ImageAnalysis\ImageAnalysis.f" included
-    s" %libdir%\ImageAnalysis\DisplayFunction.f" included
-    s" %libdir%\ForthAstroFormats\Preview.f" included
+    s" ForthAstroFormats" need-library
 ;
 ' load.ImageAnalysis library-loader ImageAnalysis
 
@@ -213,11 +211,26 @@
 ;
 ' load.ForthSeiza library-loader ForthSeiza
 
+: load.AstroImagePaths ( -- )
+    s" ForthAstroFormats" need-library
+    s" %libdir%\AstroImagingInForth\capabilities\ImagePaths.f" included
+;
+' load.AstroImagePaths library-loader AstroImagePaths
+
+: load.MountAlignment ( -- )
+    s" ForthAstroFormats" need-library
+    s" %libdir%\AstroImagingInForth\capabilities\MountAlignment.f" included
+;
+' load.MountAlignment library-loader MountAlignment
+
 : load.AstroImagingInForth ( -- )
     s" %libdir%\AstroImagingInForth\capabilities\AstroImagingInForth.f" included
+    s" AstroImagePaths" need-library
+    s" MountAlignment" need-library
     s" %libdir%\AstroImagingInForth\capabilities\Hardware.f" included
     s" %libdir%\AstroImagingInForth\capabilities\Targets&Regions.f" included
     s" %libdir%\AstroImagingInForth\capabilities\ImagingPipeline.f" included
+    s" %libdir%\AstroImagingInForth\capabilities\Acquisition.f" included
     s" %libdir%\AstroImagingInForth\capabilities\Autofocus.f" included
     s" %libdir%\AstroImagingInForth\capabilities\MountModel.f" included
     s" %libdir%\AstroImagingInForth\capabilities\FocuserModel.f" included

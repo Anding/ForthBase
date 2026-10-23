@@ -100,8 +100,12 @@ structure behind another abstraction.
 `ForthAstroFormats` and `AstroImagingInForth` each load their source groups
 in dependency order. Existing format-library names delegate to the consolidated
 formats loader, so older callers do not include the same source twice.
-`ImageAnalysis` loads preview writers after its numerical and display words;
-the formats group requests it only after frame and publication words exist.
+The formats group loads numerical/display definitions before the consolidated
+`Publication.f`. `ImageAnalysis` delegates to that same loader, so either entry
+point loads the source once without a preview/publication dependency cycle.
+`AstroImagePaths` installs imaging pathname policy; `MountAlignment` loads the
+10Micron-specific metadata computation. Both belong to AstroImagingInForth
+and are also loaded by its integrated manifest.
 `ForthASTAPFocus` remains separate so loading focus support does not select
 ASTAP astrometry. Imaging selects Seiza only while `solve-image` still points
 to `no-solver`.
