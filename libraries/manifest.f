@@ -215,7 +215,6 @@
 
 : load.AstroImagingInForth ( -- )
     s" %libdir%\AstroImagingInForth\capabilities\AstroImagingInForth.f" included
-    s" %libdir%\AstroImagingInForth\capabilities\ImagingLog.f" included
     s" %libdir%\AstroImagingInForth\capabilities\Hardware.f" included
     s" %libdir%\AstroImagingInForth\capabilities\Targets&Regions.f" included
     s" %libdir%\AstroImagingInForth\capabilities\ImagingPipeline.f" included
