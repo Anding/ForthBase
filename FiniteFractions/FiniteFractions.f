@@ -77,6 +77,7 @@
 \ test for a sign character (including blank) at the start of a string
 \ inc/decrement caddr u if a sign character is found
 \ VFX's SKIP-SIGN may not handle blank	
+	dup 0> 0= abort" Missing finite fraction"
 	over c@ case
 	'+' of  1 >R endof
 	BL  of  1 >R endof
@@ -89,28 +90,55 @@
 	then
 ;
 
-: >number~~~ ( caddr u -- x y z)
-\ convert a three part string of the form sXX:YY:ZZ into a finite fraction in 3 integer format
-\ the sign s is applied to each of x, y and z
-\ XX, YY, ZZ can be any number of digits
-\ ':' can be any non-digit character
-\ ZZ may be followed by a non-digit and the rest of the string is ignored
-\ ZZ may be omitted in which case z = 0
-	check-sign >R				( caddr u R:+/-1)
+: >number-component { caddr u | low high rest remaining -- rest u' n }
+\ Read one unsigned integer without consuming its following separator.
+\ Require digits and a single-cell result; never inspect an empty input.
+	u 0> 0= abort" Missing finite-fraction component"
+	0 0 caddr u >number -> remaining -> rest -> high -> low
+	remaining u = high 0<> or abort" Invalid finite-fraction component"
+	rest remaining low
+;
+
+: >number~~~ { caddr u | sign component -- x y z }
+\ Parse up to three signed components, separated by any non-digit character.
+\ Omitted trailing components are zero; text after the third integer is ignored.
+\ Example: s" 23*10" >number~~~ returns 23 10 0, without reading past the string.
+\ Empty input, a sign alone or a nonnumeric present component aborts.
+	caddr u check-sign -> sign -> u -> caddr
+	u 0= abort" Missing finite-fraction component"
 	3 0 do
-		0 0 2swap				( ud caddr u)	
-		>number 					( ud caddr u)
-		1- swap 1+ swap		( xd [yd zd] caddr' u') \ skip the non-printing
+		u if
+			caddr u >number-component -> component -> u -> caddr
+			u if caddr 1+ -> caddr u 1- -> u then
+			component sign *
+		else
+			0
+		then
 	loop
-	2drop	R>						( xd yd zd +/-1)
-	nip swap over * >R
-	nip swap over * >R
-	nip * R> R>
 ;
 
 : >number~ ( caddr u - x)
 \ convert a three part string of the form sXX:YY:ZZ into a finite fraction in single integer format
 	 >number~~~ ~
+;
+
+: >number3~ { caddr u separator | sign -- n }
+\ Require all three fields and the requested separators; ':' also accepts spaces.
+\ The final field must be numeric, with optional fractional seconds discarded.
+\ Example: s" 04:29:05.0" ':' >number3~ returns 16145 (4 29 5 ~).
+\ Use >number~ instead when omitted trailing fields or protocol suffixes are valid.
+	caddr u check-sign -> sign -> u -> caddr
+	2 0 do
+		caddr u >number-component -rot -> u -> caddr
+		u 0= abort" Missing finite-fraction separator"
+		caddr c@ dup separator =
+		swap bl = separator ':' = and or
+			0= abort" Invalid finite-fraction separator"
+		caddr 1+ -> caddr u 1- -> u
+	loop
+	caddr u -white dup 0= abort" Missing finite-fraction component"
+	>float 0= abort" Invalid finite-fraction component"
+	f>s ~ sign *
 ;
 
 : ~~~. ( x1 x2 x3 --)
@@ -122,4 +150,3 @@
 \ print a single integer format finite fraction in triple integer format
 	~~~ ~~~.
 ;
-
