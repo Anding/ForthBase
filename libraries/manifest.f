@@ -187,6 +187,13 @@
 ;
 ' load.ImageAnalysis library-loader ImageAnalysis
 
+: load.StarAnalysis ( -- )
+\ Load the native binding separately from histogram/image statistics.
+    s" ImageAnalysis" need-library
+    s" %libdir%\ImageAnalysis\StarAnalysis.f" included
+;
+' load.StarAnalysis library-loader StarAnalysis
+
 : load.Forth10Micron ( -- )
     s" %libdir%\Forth10Micron\10Micron_SDK.f" included
     s" %libdir%\Forth10Micron\10Micron_SDK_extend.f" included
@@ -227,11 +234,11 @@
     s" %libdir%\AstroImagingInForth\capabilities\AstroImagingInForth.f" included
     s" AstroImagePaths" need-library
     s" MountAlignment" need-library
+    s" StarAnalysis" need-library
     s" %libdir%\AstroImagingInForth\capabilities\Hardware.f" included
     s" %libdir%\AstroImagingInForth\capabilities\Targets&Regions.f" included
     s" %libdir%\AstroImagingInForth\capabilities\ImagingPipeline.f" included
     s" %libdir%\AstroImagingInForth\capabilities\Acquisition.f" included
-    s" %libdir%\AstroImagingInForth\capabilities\Autofocus.f" included
     s" %libdir%\AstroImagingInForth\capabilities\MountModel.f" included
     s" %libdir%\AstroImagingInForth\capabilities\FocuserModel.f" included
     s" %libdir%\AstroImagingInForth\capabilities\LightboxFlats.f" included
