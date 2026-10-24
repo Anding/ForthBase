@@ -41,12 +41,12 @@
 
 : ~~~$ ( x1 x2 x3 -- c-addr u)
 \ format a triple integer format finite fraction as a string x1cx2cx3
+	3dup or or >R	\ Retain the sign when the leading components are zero.
 	<# 				\ proceeds from the rightmost character in the string
 	abs 0 # #s 2drop	\ numeric output works with double numbers
 	ff2separator HOLD
 	abs 0 # #s 2drop
 	ff1separator HOLD
-	dup >R 
 	abs 0 # #s
 	R> 0 < if '-' HOLD else ffForcePlus if '+' HOLD then then
 	#>
