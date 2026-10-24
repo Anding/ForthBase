@@ -121,26 +121,7 @@
 ' load.ForthKMTronic library-loader ForthKMTronic
 
 : load.ForthAstroFormats ( -- )
-    s" %libdir%\ForthAstroFormats\Frame.f" included
-    s" %libdir%\ForthAstroFormats\Paths.f" included
-    s" %libdir%\ForthAstroFormats\FITS.f" included
-    s" %libdir%\ForthAstroFormats\FITS_cards.f" included
-    s" %libdir%\ForthAstroFormats\XISF.f" included
-    s" %libdir%\ForthAstroFormats\XISF_load.f" included
-    s" %libdir%\ForthAstroFormats\FITS_load.f" included
-    s" %libdir%\ForthAstroFormats\RasterIO.f" included
-    s" %libdir%\ForthAstroFormats\AtomicFile.f" included
-    s" %libdir%\ForthAstroFormats\PNG.f" included
-    s" %libdir%\ForthAstroFormats\RAW.f" included
-    s" %libdir%\ForthAstroFormats\BMP.f" included
-    s" %libdir%\ForthAstroFormats\properties_obs.f" included
-    s" %libdir%\ForthAstroFormats\properties_rig.f" included
-    s" %libdir%\ForthAstroFormats\XISF_maps.f" included
-    s" %libdir%\ForthAstroFormats\XISF_spawn.f" included
-    s" %libdir%\ForthAstroFormats\Solver.f" included
-    s" %libdir%\ImageAnalysis\ImageAnalysis.f" included
-    s" %libdir%\ImageAnalysis\DisplayFunction.f" included
-    s" %libdir%\ForthAstroFormats\Publication.f" included
+    s" %libdir%\ForthAstroFormats\ForthAstroFormats.f" included
 ;
 ' load.ForthAstroFormats library-loader ForthAstroFormats
 
@@ -184,6 +165,7 @@
 
 : load.ImageAnalysis ( -- )
     s" ForthAstroFormats" need-library
+    s" %libdir%\ImageAnalysis\Library.f" included
 ;
 ' load.ImageAnalysis library-loader ImageAnalysis
 
@@ -191,8 +173,15 @@
 \ Load the native binding separately from histogram/image statistics.
     s" ImageAnalysis" need-library
     s" %libdir%\ImageAnalysis\StarAnalysis.f" included
+    s" FocusCurve" need-library
 ;
 ' load.StarAnalysis library-loader StarAnalysis
+
+: load.FocusCurve ( -- )
+\ Load only the numerical curve ABI, without frame or equipment dependencies.
+    s" %libdir%\ImageAnalysis\FocusCurve.f" included
+;
+' load.FocusCurve library-loader FocusCurve
 
 : load.Forth10Micron ( -- )
     s" %libdir%\Forth10Micron\10Micron_SDK.f" included
@@ -232,16 +221,5 @@
 
 : load.AstroImagingInForth ( -- )
     s" %libdir%\AstroImagingInForth\capabilities\AstroImagingInForth.f" included
-    s" AstroImagePaths" need-library
-    s" MountAlignment" need-library
-    s" StarAnalysis" need-library
-    s" %libdir%\AstroImagingInForth\capabilities\Hardware.f" included
-    s" %libdir%\AstroImagingInForth\capabilities\Targets&Regions.f" included
-    s" %libdir%\AstroImagingInForth\capabilities\ImagingPipeline.f" included
-    s" %libdir%\AstroImagingInForth\capabilities\Acquisition.f" included
-    s" %libdir%\AstroImagingInForth\capabilities\Autofocus.f" included
-    s" %libdir%\AstroImagingInForth\capabilities\MountModel.f" included
-    s" %libdir%\AstroImagingInForth\capabilities\FocuserModel.f" included
-    s" %libdir%\AstroImagingInForth\capabilities\LightboxFlats.f" included
 ;
 ' load.AstroImagingInForth library-loader AstroImagingInForth
