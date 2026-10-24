@@ -239,6 +239,7 @@
     s" %libdir%\AstroImagingInForth\capabilities\Targets&Regions.f" included
     s" %libdir%\AstroImagingInForth\capabilities\ImagingPipeline.f" included
     s" %libdir%\AstroImagingInForth\capabilities\Acquisition.f" included
+    s" %libdir%\AstroImagingInForth\capabilities\Autofocus.f" included
     s" %libdir%\AstroImagingInForth\capabilities\MountModel.f" included
     s" %libdir%\AstroImagingInForth\capabilities\FocuserModel.f" included
     s" %libdir%\AstroImagingInForth\capabilities\LightboxFlats.f" included
