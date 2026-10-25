@@ -42,8 +42,8 @@
 \ allocation, scans and erasure all use this global size, not a saved header.
 \ The record layout assumes a four-byte hash cell. If changing field sizes,
 \ also change the 59/255 limits, key-buffer size and reset's 256-byte erase.
-\ The single normalization buffer makes key operations non-reentrant; callers
-\ must serialize concurrent use, even when operating on different maps.
+\ Normalization storage is task-local, so independent maps can be used by
+\ concurrent tasks. Callers must still serialize access to the same map.
 \ Lookup, assignment and count scan at most max-records entries, O(capacity);
 \ reset and iteration are O(count), erase and allocation O(capacity) bytes.
 \ No lookup, assignment or iteration allocates memory.
@@ -82,8 +82,8 @@ END-STRUCTURE
     swap ordered-map.record * +
 ;
 
-\ Shared counted-string workspace, also used when map! stores a new key.
-create ordered-map.key-buffer 60 allot
+\ Task-local counted-string workspace, also used when map! stores a new key.
+60 +USER ordered-map.key-buffer
 
 : ordered-map.hash ( c-addr u -- hash )
 \ Normalize into key-buffer and hash that copy, leaving the input unchanged.

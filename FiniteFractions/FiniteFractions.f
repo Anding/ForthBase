@@ -39,17 +39,23 @@
 	+						( x3+D*{x2+D*x1} )
 ;
 
-: ~~~$ ( x1 x2 x3 -- c-addr u)
-\ format a triple integer format finite fraction as a string x1cx2cx3
+: ~~~custom$ { x1 x2 x3 c1 c2 fp -- c-addr u }
+\ Format three components with explicit separators, without changing defaults.
+	x1 x2 x3
 	3dup or or >R	\ Retain the sign when the leading components are zero.
 	<# 				\ proceeds from the rightmost character in the string
 	abs 0 # #s 2drop	\ numeric output works with double numbers
-	ff2separator HOLD
+	c2 HOLD
 	abs 0 # #s 2drop
-	ff1separator HOLD
+	c1 HOLD
 	abs 0 # #s
-	R> 0 < if '-' HOLD else ffForcePlus if '+' HOLD then then
+	R> 0 < if '-' HOLD else fp if '+' HOLD then then
 	#>
+;
+
+: ~~~$ ( x1 x2 x3 -- c-addr u)
+\ Format three components using the configured separators and sign policy.
+	ff1separator ff2separator ffForcePlus ~~~custom$
 ;
 
 : ~$ ( x -- c-addr u)
@@ -57,20 +63,9 @@
 	~~~ ~~~$
 ;
 
-: ~custom$ ( x c1 c2 fp -- c-addr u)
-\ format a single integer format finite fraction as a string x1cx2cx3
-	ff1separator >R ff2separator >R ffForcePlus >R									\ save current
-	-> ffForcePlus -> ff2separator -> ff1separator 
-	~$
-	R> -> ffForcePlus R> -> ff2separator R> -> ff1separator 						\ restore
-;
-
-: ~~~custom$ ( x c1 c2 fp -- c-addr u)
-\ format a single integer format finite fraction as a string x1cx2cx3
-	ff1separator >R ff2separator >R ffForcePlus >R									\ save current
-	-> ffForcePlus -> ff2separator -> ff1separator 
-	~~~$
-	R> -> ffForcePlus R> -> ff2separator R> -> ff1separator 						\ restore
+: ~custom$ { x c1 c2 fp -- c-addr u }
+\ Format one packed coordinate without temporarily changing shared defaults.
+	x ~~~ c1 c2 fp ~~~custom$
 ;
 
 : check-sign ( caddr u -- caddr u +/-1)
