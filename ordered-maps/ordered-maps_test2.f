@@ -3,7 +3,7 @@ NEED ordered-maps
 NEED simple-tester
 
 \ Guard records exist only in this test, not in the implementation.
-ordered-map.max-records 2 + ordered-map.record * allocate throw constant om.storage
+ordered-map.max-records 2 + ordered-map.record * BUFFER: om.storage
 om.storage ordered-map.record + constant om.full
 om.storage ordered-map.max-records 1+ ordered-map.record * + constant om.end
 om.storage ordered-map.record 85 fill
@@ -26,14 +26,19 @@ variable om.here
 ;
 
 : om.check-pair { index key-addr key-u value-addr value-u -- index+1 }
-    key-addr key-u index (.) compare abort" wrong iteration order"
-    value-addr value-u s" payload" compare abort" wrong iteration value"
+\ Check both strings while keeping the iterator's accumulator.
+    key-addr key-u index (.) compare
+    value-addr value-u s" payload" compare or if
+        1 Tfailures +! cr ." wrong iteration pair" cr
+    then
     index 1+
 ;
 
 : om.check-empty { index key-addr key-u value-addr value-u -- index+1 }
-    key-addr key-u index (.) compare abort" reset changed a key"
-    value-addr value-u or abort" reset value is not 0 0"
+\ Check retained keys and canonical empty values after reset.
+    key-addr key-u index (.) compare value-addr or value-u or if
+        1 Tfailures +! cr ." reset changed a key or retained a value" cr
+    then
     index 1+
 ;
 
@@ -71,8 +76,8 @@ T{ om.guards? }T -1 ==
 T{ s" 0" om.full map@ s" payload" compare }T 0 ==
 T{ s" 1023" om.full map@ s" payload" compare }T 0 ==
 T{ s" missing" om.full map@ }T 0 0 ==
-T{ ' om.overflow catch }T -2 ==
-T{ ' om.quoted-overflow catch }T -2 ==
+T{ om.overflow }T ==
+T{ om.quoted-overflow }T ==
 T{ om.full map-count }T 1024 ==
 T{ s" OVERFLOW" om.full map@ }T 0 0 ==
 T{ om.guards? }T -1 ==
@@ -89,7 +94,7 @@ T{ om.full reset-map om.full map-count }T 1024 ==
 T{ 0 ' om.check-empty om.full map-for-each }T 1024 ==
 T{ s" 0" om.full map@ }T 0 0 ==
 T{ s" 1023" om.full map@ }T 0 0 ==
-T{ ' om.overflow catch }T -2 ==
+T{ om.overflow }T ==
 T{ om.guards? }T -1 ==
 T{ om.reuse }T ==
 T{ om.full map-count }T 1024 ==

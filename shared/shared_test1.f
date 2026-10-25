@@ -74,5 +74,9 @@ T{ 123 20 21 shared 2constant paircon1 }T 123 ==
 T{ 123 20 21 shared 2value vals1 }T 123 ==
 T{ 123 s" replacement" shared $value text1 }T 123 ==
 
+\ An unsupported repeated definer reports and releases its saved input state.
+create shared.existing
+T{ 123 shared create shared.existing }T 123 ==
+
 Tend
 CR

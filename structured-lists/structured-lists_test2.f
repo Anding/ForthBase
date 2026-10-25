@@ -30,7 +30,9 @@ create sl2.single sl2.a , 0 ,
 ;
 
 : sl2.unexpected ( -- )
-    abort" Callback must not run for an empty query or a list shorter than two"
+\ Record an unexpected callback without interrupting the regression.
+    1 Tfailures +!
+    cr ." Callback must not run for an empty query or a list shorter than two" cr
 ;
 
 Tstart

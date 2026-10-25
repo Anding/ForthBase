@@ -84,19 +84,14 @@ variable wt-output-mode?
 previous definitions
 
 : wt-included	\ c-addr u --
-\ Include one source file without preventing entry to the REPL on failure.
-\ INCLUDED consumes one copy of the filename. CATCH preserves the other copy
-\ so it can be discarded on either path. The recovery sequence mirrors the
-\ normal QUIT cleanup needed after a failed include.
-  2dup ['] included catch ?dup if
-    .throw
-    2drop
-    clean-opt cleanup-locals
-    OperatorType off
-    QuitHook
-    init-quit
+\ Skip a missing source file; source compilation remains the interpreter's job.
+  2dup r/o open-file if
+    drop 2drop cr ." Cannot open startup source" cr exit
   endif
-  2drop
+  close-file if
+    2drop cr ." Cannot close startup source" cr exit
+  endif
+  included
 ;
 
 : wt-entry	\ hinst hpinst lpstrcmd nshow -- flag

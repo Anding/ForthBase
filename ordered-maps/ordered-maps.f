@@ -25,8 +25,8 @@
 \ reset-map retains keys and order; erase-map clears every record.
 \ Strings are borrowed from the map, not allocated by lookup or iteration.
 \ Do not retain them across replacement, reset, erase, or free.
-\ A full map accepts replacements but aborts with "map full" on a new key.
-\ Allocation and deallocation errors are propagated with THROW.
+\ A full map accepts replacements; a new key reports "map full" and is skipped.
+\ Allocation failure aborts. Deallocation failure is reported and returns.
 \
 \ Representation and maintenance
 \ ------------------------------
@@ -67,13 +67,14 @@ END-STRUCTURE
 
 : allocate-map ( -- map )
 \ Allocate and zero one array on the heap; the caller must later free it.
-    ordered-map.max-records ordered-map.record * allocate throw
+    ordered-map.max-records ordered-map.record * allocate
+        abort" unable to allocate map"
     dup erase-map
 ;
 
 : free-map ( map -- )
 \ Release an allocated array; invalidate its address and all borrowed strings.
-    free throw
+    free if cr ." unable to free map" cr then
 ;
 
 \ Internal addressing and lookup. Every scan is bounded by max-records.
@@ -145,7 +146,7 @@ END-STRUCTURE
 \ original stored key and position on updates (including hash collisions).
     key-addr key-u ordered-map.hash -> hash
     hash map ordered-map.slot -> entry
-    entry 0= abort" map full"
+    entry 0= if cr ." map full" cr exit then
     entry ordered-map.key-hash @ 0= if
         ordered-map.key-buffer count entry ordered-map.key place
         hash entry ordered-map.key-hash !

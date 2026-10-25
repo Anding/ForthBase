@@ -24,24 +24,18 @@ wordlist constant library-registry
 \ wordlist. It is exposed as a constant for diagnostics but is not left in the
 \ normal search order.
 
-: run-library-loader { body | ior -- }
-\ Mark before execution to break dependency cycles, but restore the unloaded
-\ state when an include throws so an interactive session can retry.
+: run-library-loader { body -- }
+\ Mark before execution to break dependency cycles; load controlled sources once.
     body @ if exit then
     -1 body !
-    body cell+ @ catch -> ior
-    ior if
-        0 body !
-        ior throw
-    then
+    body cell+ @ execute
 ;
 
 : library-loader ( loader-xt "<name>" -- )
 \ Define a registry entry with body layout:
 \   cell 0: loaded flag
 \   cell 1: loader execution token
-\ run-library-loader sets the flag before the action to break cycles and clears
-\ it if the action throws.
+\ run-library-loader sets the flag before the action to break cycles.
     create 0 , ,
     does> run-library-loader
 ;
@@ -55,7 +49,7 @@ wordlist constant library-registry
         exit
     then
     library-registry search-wordlist
-    dup 0= abort" Unknown library"
+    dup 0= if drop cr ." Unknown library" cr exit then
     drop execute
 ;
 

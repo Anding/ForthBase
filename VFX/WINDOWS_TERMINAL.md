@@ -12,7 +12,7 @@ in-process command history.
 - 256 command lines of nonpersistent history
 - Automatic inclusion of `startup.f`
 - Optional inclusion of one source file from the command line
-- Recoverable include errors
+- Missing startup files report and are skipped
 - Redirected standard input and output
 
 This is a dedicated turnkey executable. It does not alter `Bin\VFXcon.exe`,
@@ -127,9 +127,9 @@ Only the first positional argument is used. Later arguments are ignored.
 The argument is always treated as a filename; it is never evaluated as Forth
 text. Relative paths resolve from the process working directory.
 
-If either file is missing or throws while loading, VFXterm reports the error,
-cleans up the interpreter state, continues with the remaining startup step,
-and enters the prompt.
+If either file cannot be opened, VFXterm reports the error and continues with
+the remaining startup step. Source compilation errors remain native interpreter
+errors; the launcher does not intercept them or promise to run later steps.
 
 ## Edit commands
 
@@ -241,8 +241,8 @@ emulators do not provide that interactive response.
 
 ### Include errors appear but the prompt remains available
 
-This is intentional. Startup errors are visible but recoverable so a broken
-local configuration cannot prevent access to the REPL.
+Missing startup files are reported and skipped. Source compilation errors are
+handled by the native interpreter, not by launcher recovery code.
 
 ### Ctrl+C behavior
 
@@ -259,7 +259,7 @@ word depends on that word and the runtime's existing keyboard-abort handling.
 - installs the process's real Win32 standard handles into `xconsole`;
 - captures, enables, and later restores console VT modes;
 - registers terminal startup and shutdown hooks;
-- implements recoverable source inclusion;
+- skips unavailable startup source files;
 - installs the dedicated turnkey entry point; and
 - saves `Bin\VFXterm.exe`.
 
@@ -276,7 +276,7 @@ Automated tests have exercised:
 
 - startup and optional-file ordering;
 - quoted file paths and ignored later arguments;
-- missing and throwing include files;
+- missing include files (compiler-error recovery is no longer a launcher feature);
 - command-line text being treated only as a filename;
 - redirected input and output;
 - Left, Right, Home, End, `0x08`/`0x7F` Backspace, and `ESC [ 3 ~` Delete

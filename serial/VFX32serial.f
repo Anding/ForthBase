@@ -27,11 +27,12 @@
 : open-serial ( com_port baud my_sid --)
 \ my_sid is a VFX generic I/O structure, use the word SERDEV:
 	>R connection_string ( sid addr ) 7 ( VFX settings) R> ( c-addr u attribs sid) open-gio ( sid ior) 
-	ABORT" Failed to open COM port" drop
+	if cr ." Failed to open COM port" cr then drop
 ;
 
-: close-serial ( my_sid)
-	close-gio ABORT" Failed to close COM port"
+: close-serial ( my_sid -- )
+\ Close the serial device and report an unsuccessful close.
+	close-gio if cr ." Failed to close COM port" cr then
 ;
 
 \ usesful Windows command line tools 

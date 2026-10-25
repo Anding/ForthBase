@@ -50,14 +50,21 @@ T{ buf1 buffer-to-string nip }T 25 ==
 
 T{ buf1 buffer-to-string hashS }T buf2 buffer-to-string hashS ==
 
-Tend
-
-\ review buffers
-	buf1 buffer-to-string dump
-	buf2 buffer-to-string dump                  
+\ Failed file operations return normally without publishing partial buffers.
+T{ test_fileid close-file }T 0 ==
+T{ s" %idir%\buffers_test1.txt" w/o open-file
+    swap constant test_writeonly }T 0 ==
+T{ test_writeonly file-to-buffer }T 0 ==
+T{ buf1 10 test_writeonly buffer-read-file nip 0<> }T -1 ==
+T{ buf1 buffer_used }T 25 ==
+T{ test_writeonly close-file }T 0 ==
+T{ s" %idir%\buffers_test1.txt" r/o open-file
+    swap constant test_readonly }T 0 ==
+T{ buf1 test_readonly buffer-to-file }T ==
+T{ test_readonly close-file }T 0 ==
 
 \ release resources
 	buf1 free-buffer
 	buf2 free-buffer
-	test_fileid close-file drop
 
+Tend

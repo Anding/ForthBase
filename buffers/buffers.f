@@ -38,7 +38,7 @@ END-STRUCTURE
 
 : free-buffer ( buf --)
 \ free the buffer memory and descriptor
-	free abort" unable to free buffer"
+	free if cr ." unable to free buffer" cr then
 ;
 
 : buffer_used ( buf -- x)
@@ -85,24 +85,33 @@ END-STRUCTURE
 	then 
 ;
 
-: file-to-buffer ( fileid -- buf)
-\ memory map a file to a newly allocated buffer and return the descriptor
-	dup file-size abort" cannot access file" drop	( fileid size)					\ file-size returns a double			
-	over 0 0 rot reposition-file abort" cannot access file"
-	dup allocate-buffer >R									( fileid size R:buf)			\ allocate a suitable buffer
-	dup rot R@ BUFFER_ADDR -rot							( n addr n fileid R:buf)
-	read-file abort" cannot access file" drop			( n R:buf)
-	R@ BUFFER_POINTER +! R>									
+: file-to-buffer { fileid | size high ior buf actual -- buf|0 }
+\ Read a complete file; report failure and return zero without a partial buffer.
+\ The caller retains ownership of fileid, including on failure.
+	fileid file-size -> ior -> high -> size
+	ior high or size 0< or if
+		cr ." cannot size file" cr 0 exit
+	then
+	0 0 fileid reposition-file if
+		cr ." cannot reposition file" cr 0 exit
+	then
+	size allocate-buffer -> buf
+	buf BUFFER_ADDR size fileid read-file -> ior -> actual
+	ior actual size <> or if
+		cr ." cannot read complete file" cr
+		buf free-buffer 0 exit
+	then
+	actual buf BUFFER_POINTER +!
+	buf
 ;
 
-: buffer-read-file ( buf n fileid -- n2 IOR)
-\ read a file into an existing buffer
-    >R >R dup dup R>                ( buf buf buf n R:fileid)
-    swap buffer_space min           ( buf buf n' R:fileid)
-    swap BUFFER_POINTER @ swap      ( buf buf caddr n R:fileid)
-	R> read-file ( buf n2 IOR)
-	>R dup rot ( n2 n2 buf R:IOR) BUFFER_POINTER +!
-	R> ( n2 IOR)
+: buffer-read-file { buf n fileid | actual ior -- n2 ior }
+\ Append a bounded read; failed reads do not publish bytes through the pointer.
+	buf BUFFER_POINTER @ n buf buffer_space min fileid read-file
+	-> ior -> actual
+	ior if 0 ior exit then
+	actual buf BUFFER_POINTER +!
+	actual 0
 ;
 
 : buffer-to-string ( buf -- c-addr u)
@@ -114,9 +123,7 @@ END-STRUCTURE
 
 : buffer-to-file ( buf fileid --)
 \ save the contents (used portion) of the buffer to fileid
-	>R
-	buffer-to-string
- 	R>				  ( addr n fileid)
-	write-file abort" cannot access file"	
+	>R buffer-to-string R>
+	write-file if cr ." cannot write file" cr then
 ;
 		

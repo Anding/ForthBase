@@ -3,44 +3,29 @@
 NEED simple-tester
 
 : library-loaded? ( caddr u -- flag )
+\ Inspect a known registry flag without loading it.
     library-registry search-wordlist
-    dup 0= abort" Missing test registry entry"
+    dup 0= if
+        drop 1 Tfailures +! cr ." Missing test registry entry" cr 0 exit
+    then
     drop >body @
-;
-
-: request-unknown-library ( -- )
-    s" ThisLibraryDoesNotExist" need-library
-;
-
-: request-retired-map-library ( -- )
-    s" forth-map" need-library
-;
-
-0 value retry-loader-attempts
-
-: load.retry-test ( -- )
-    retry-loader-attempts 1+ -> retry-loader-attempts
-    retry-loader-attempts 1 = if -999 throw then
 ;
 
 get-current
 library-registry set-current
 get-order library-registry swap 1+ set-order
 : load.TestWord1 ( -- )
+\ Load the fixture that requests TestWord2.
     s" %libdir%\ForthBase\libraries\Test1.f" included
 ;
 ' load.TestWord1 library-loader TestWord1
 : load.TestWord2 ( -- )
+\ Load the second dependency fixture.
     s" %libdir%\ForthBase\libraries\Test2.f" included
 ;
 ' load.TestWord2 library-loader TestWord2
-' load.retry-test library-loader RetryTest
 previous
 set-current
-
-: request-retry-test ( -- )
-    s" RetryTest" need-library
-;
 
 Tstart
 
@@ -55,12 +40,7 @@ T{ s" TestWord2" library-loaded? }T -1 ==
 NEED TestWord1
 
 T{ s" TestWord1" library-loaded? }T -1 ==
-T{ ' request-unknown-library catch 0<> }T -1 ==
-T{ ' request-retired-map-library catch 0<> }T -1 ==
-T{ ' request-retry-test catch }T -999 ==
-T{ s" RetryTest" library-loaded? }T 0 ==
-T{ request-retry-test }T ==
-T{ retry-loader-attempts }T 2 ==
-T{ s" RetryTest" library-loaded? }T -1 ==
+T{ s" ThisLibraryDoesNotExist" need-library }T ==
+T{ s" forth-map" need-library }T ==
 
 Tend

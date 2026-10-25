@@ -58,7 +58,7 @@ END-STRUCTURE
 
 : free-tree ( tree --)
 \ free the tree memory and descriptor
-	free abort" unable to free buffer"
+	free if cr ." unable to free tree" cr then
 ;
 
 : node! ( x node --)
@@ -77,24 +77,30 @@ END-STRUCTURE
 	NODE_PAYLOAD count
 ;
 
-: new-node ( tree -- new)
-	\ initialize a 0 node descriptor and return its address
+: new-node ( tree -- new|0)
+	\ Reserve one node, or report a full tree and return zero.
 	>R 
-	R@ tree_space NODE_DESCRIPTOR < abort" insufficent memory for a new node"
+	R@ tree_space NODE_DESCRIPTOR < if
+		R> drop cr ." insufficient space for a new node" cr 0 exit
+	then
 	R@ TREE_POINTER @								( new)
 	NODE_DESCRIPTOR R> TREE_POINTER +! 
 ;
 
-: new-next-node ( current tree -- new)
-	new-node dup -rot 2dup ( new current new current new)
+: new-next-node ( current tree -- new|0)
+\ Link a new sibling only when the tree has room.
+	new-node dup 0= if nip exit then
+	dup -rot 2dup ( new current new current new)
 	\ point the current node next field to new
 	swap NEXT_NODE !
 	\ point the new node back node to current
 	BACK_NODE !
 ;
 
-: new-down-node ( current new --)
-	new-node dup -rot 2dup ( new current new current new)
+: new-down-node ( current tree -- new|0)
+\ Link a new child only when the tree has room.
+	new-node dup 0= if nip exit then
+	dup -rot 2dup ( new current new current new)
 	\ point the current node down field to new
 	swap DOWN_NODE !
 	\ point the new node up node to current

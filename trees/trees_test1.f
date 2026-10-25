@@ -66,6 +66,17 @@ T{ 3 nod3 node! }T ==
 T{ 4 nod4 node! }T ==
 T{ 5 nod5 node! }T ==
 T{ 6 nod6 node! }T ==
+
+\ Exhaustion reports and returns zero without touching the existing links.
+NODE_DESCRIPTOR allocate-tree constant tre.small
+tre.small new-node constant nod.small
+T{ tre.small new-node }T 0 ==
+T{ nod.small tre.small new-next-node }T 0 ==
+T{ nod.small NEXT_NODE @ }T 0 ==
+T{ nod.small tre.small new-down-node }T 0 ==
+T{ nod.small DOWN_NODE @ }T 0 ==
+T{ tre.small tree_used }T NODE_DESCRIPTOR ==
+tre.small free-tree
 Tend
 
 ASSIGN explain-move TO-DO do-after-move

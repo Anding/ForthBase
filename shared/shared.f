@@ -23,7 +23,10 @@ set-current
 	have										( xn...x1 n c-addr u flag)	\ the name of the word to be defined
 	if							\ name is already in the dictionary
 		shared.definers search-wordlist
-		0= abort" Unsupported SHARED defining word"
+		0= if
+			cr ." Unsupported SHARED defining word" cr
+			ndrop exit
+		then
 		execute >R ndrop				\ drop the input buffer
 		R> ndrop								\ drop the value(s) and the count of values	
 	else						\ otherwise restore the input buffer to just before the defining word

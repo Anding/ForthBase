@@ -69,47 +69,49 @@
 ;
 
 : check-sign ( caddr u -- caddr u +/-1)
-\ test for a sign character (including blank) at the start of a string
-\ inc/decrement caddr u if a sign character is found
-\ VFX's SKIP-SIGN may not handle blank	
-	dup 0> 0= abort" Missing finite fraction"
-	over c@ case
-	'+' of  1 >R endof
-	BL  of  1 >R endof
-	'-' of -1 >R endof
-	0 >R endcase
-	R@ 0= if 
-		R> drop 1
+\ Skip one sign character, including a blank, and retain its multiplier.
+	dup 0> 0= if cr ." Missing finite fraction" cr 2drop 0 0 1 exit then
+	over c@ bl = if
+		1 /string 1
 	else
-		1- swap 1+ swap R> 
+		skip-sign if -1 else 1 then
 	then
 ;
 
-: >number-component { caddr u | low high rest remaining -- rest u' n }
+: >number-component { caddr u | low high rest remaining -- rest u' n valid? }
 \ Read one unsigned integer without consuming its following separator.
 \ Require digits and a single-cell result; never inspect an empty input.
-	u 0> 0= abort" Missing finite-fraction component"
+	u 0> 0= if 0 0 0 false exit then
 	0 0 caddr u >number -> remaining -> rest -> high -> low
-	remaining u = high 0<> or abort" Invalid finite-fraction component"
-	rest remaining low
+	remaining u = high 0<> or if 0 0 0 false exit then
+	rest remaining low true
 ;
 
-: >number~~~ { caddr u | sign component -- x y z }
+: >number~~~? { caddr u | sign component -- x y z valid? }
 \ Parse up to three signed components, separated by any non-digit character.
 \ Omitted trailing components are zero; text after the third integer is ignored.
-\ Example: s" 23*10" >number~~~ returns 23 10 0, without reading past the string.
-\ Empty input, a sign alone or a nonnumeric present component aborts.
+\ Invalid input returns three zeros and false, never partially parsed fields.
+	u 0> 0= if 0 0 0 false exit then
 	caddr u check-sign -> sign -> u -> caddr
-	u 0= abort" Missing finite-fraction component"
+	u 0= if 0 0 0 false exit then
 	3 0 do
 		u if
-			caddr u >number-component -> component -> u -> caddr
+			caddr u >number-component 0= if
+				3drop i ndrop 0 0 0 false unloop exit
+			then
+			-> component -> u -> caddr
 			u if caddr 1+ -> caddr u 1- -> u then
 			component sign *
 		else
 			0
 		then
 	loop
+	true
+;
+
+: >number~~~ ( caddr u -- x y z )
+\ Parse permissively; report malformed text and return three zeros on failure.
+	>number~~~? 0= if cr ." Invalid finite fraction" cr then
 ;
 
 : >number~ ( caddr u - x)
@@ -117,23 +119,32 @@
 	 >number~~~ ~
 ;
 
-: >number3~ { caddr u separator | sign -- n }
+: >number3~? { caddr u separator | sign x y component -- n valid? }
 \ Require all three fields and the requested separators; ':' also accepts spaces.
 \ The final field must be numeric, with optional fractional seconds discarded.
-\ Example: s" 04:29:05.0" ':' >number3~ returns 16145 (4 29 5 ~).
-\ Use >number~ instead when omitted trailing fields or protocol suffixes are valid.
+\ Return zero and false for malformed input, without publishing partial fields.
+	u 0> 0= if 0 false exit then
 	caddr u check-sign -> sign -> u -> caddr
 	2 0 do
-		caddr u >number-component -rot -> u -> caddr
-		u 0= abort" Missing finite-fraction separator"
+		caddr u >number-component 0= if
+			3drop 0 false unloop exit
+		then
+		-> component -> u -> caddr
+		i if component -> y else component -> x then
+		u 0= if 0 false unloop exit then
 		caddr c@ dup separator =
 		swap bl = separator ':' = and or
-			0= abort" Invalid finite-fraction separator"
+			0= if 0 false unloop exit then
 		caddr 1+ -> caddr u 1- -> u
 	loop
-	caddr u -white dup 0= abort" Missing finite-fraction component"
-	>float 0= abort" Invalid finite-fraction component"
-	f>s ~ sign *
+	caddr u -white dup 0= if 2drop 0 false exit then
+	>float 0= if 0 false exit then
+	x y f>s ~ sign * true
+;
+
+: >number3~ ( caddr u separator -- n )
+\ Parse strictly; report malformed text and return zero on failure.
+	>number3~? 0= if cr ." Invalid finite fraction" cr then
 ;
 
 : ~~~. ( x1 x2 x3 --)

@@ -20,13 +20,14 @@ For `NEED Name`:
    skipped for compatibility with externally loaded libraries.
 2. Otherwise, `Name` is looked up in `library-registry`.
 3. Its loader is executed only on the first request in the session.
-4. An unregistered name aborts with `Unknown library`.
+4. An unregistered name reports `Unknown library` and returns.
 
 Dependencies are ordinary loader calls and therefore receive the same
 one-time behaviour. A loader is marked before its action executes, preventing
-recursive dependency cycles. If an include throws, the loaded flag is cleared
-before the exception is rethrown, so the request can be retried after fixing
-the cause.
+recursive dependency cycles. Sources are controlled installation files; there
+is no preflight layer, exception interception or automatic retry. Native
+include/compiler errors remain interpreter errors; use a fresh session after
+correcting an incomplete source load.
 
 `NEED` parses the next source word and is intended for source loading. Code
 which already has a library name as a string may use:
@@ -128,4 +129,4 @@ ForthBase\libraries\libraries_test1.f
 ```
 
 It covers registry lookup, recursive dependency loading, one-time execution,
-retry after loader failure, and explicit failure for an unknown name.
+and reporting and normal return for an unknown name.

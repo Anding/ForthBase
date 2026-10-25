@@ -52,14 +52,14 @@
 \ create a named buffer of n bytes
 \ overwrite VFX's word to use allocate
 	create	( n <name> --)
-		allocate ( addr ior) throw ( addr) ,
+		allocate abort" unable to allocate buffer" ,
 	does>		( -- addr)
 		@
 ;
 
 : DEBUFFER ( addr --)
 \ free a buffer created with the word buffer
-	free throw
+	free if cr ." unable to free buffer" cr then
 ;
 
 CODE twist ( x1-x2-x3-x4 -- x4-x3-x2-x1)
