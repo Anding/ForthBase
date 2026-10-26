@@ -1,16 +1,13 @@
-\ Private loader dictionary used by NEED. Each action keeps nonuniform paths
-\ and dependencies explicit; library-loader supplies one-time execution.
+\ Private loader dictionary used by NEED; library-loader supplies one-time loading.
+\ Repository entry files own dependencies and internal include order.
 \
 \ Maintenance pattern for every public library name:
 \   : load.Name ( -- )
-\       s" Dependency" need-library
-\       s" %libdir%\repository\source.f" included
+\       s" %libdir%\repository\Library.f" included
 \   ;
 \   ' load.Name library-loader Name
 \
-\ Dependencies use need-library rather than parsed NEED because these actions
-\ execute later, after the manifest has compiled. Registration order is not
-\ dependency order: the complete registry exists before any loader is called.
+\ ForthBase's utility loaders below retain their explicit source lists.
 
 : load.simple-tester ( -- )
     s" %libdir%\simple-tester\simple-tester.f" included
@@ -72,10 +69,7 @@
 ' load.Windows library-loader Windows
 
 : load.ForthVT100 ( -- )
-    s" %libdir%\ForthVT100\ForthVT100.f" included
-    s" %libdir%\ForthVT100\ForthVT100_tables.f" included
-    s" %libdir%\ForthVT100\ForthVT100_UI.f" included
-    s" %libdir%\ForthVT100\ForthLog.f" included
+    s" %libdir%\ForthVT100\Library.f" included
 ;
 ' load.ForthVT100 library-loader ForthVT100
 
@@ -85,33 +79,22 @@
 ' load.regex library-loader regex
 
 : load.ForthASI ( -- )
-    s" %libdir%\ForthASI\ForthASI\ASI_SDK.f" included
-    s" %libdir%\ForthASI\ForthASI\ASI_SDK_extend.f" included
-    s" %libdir%\ForthASI\ForthASI\ForthAstroCamera.f" included
-    s" %libdir%\ForthASI\ForthASI\ForthAstroCameraMaps.f" included
+    s" %libdir%\ForthASI\ForthASI\Library.f" included
 ;
 ' load.ForthASI library-loader ForthASI
 
 : load.ForthAstroCalc ( -- )
-    s" %libdir%\AstroCalc\ForthAstroCalc\ForthAstroCalc.f" included
-    s" %libdir%\AstroCalc\ForthAstroCalc\SkyRegions.f" included
-    s" %libdir%\AstroCalc\ForthAstroCalc\TargetLists.f" included
+    s" %libdir%\AstroCalc\ForthAstroCalc\Library.f" included
 ;
 ' load.ForthAstroCalc library-loader ForthAstroCalc
 
 : load.ForthEAF ( -- )
-    s" %libdir%\ForthEAF\EAF_SDK.f" included
-    s" %libdir%\ForthEAF\EAF_SDK_extend.f" included
-    s" %libdir%\ForthEAF\ForthFocuser.f" included
-    s" %libdir%\ForthEAF\ForthFocuserMaps.f" included
+    s" %libdir%\ForthEAF\Library.f" included
 ;
 ' load.ForthEAF library-loader ForthEAF
 
 : load.ForthEFW ( -- )
-    s" %libdir%\ForthEFW\EFW_SDK.f" included
-    s" %libdir%\ForthEFW\EFW_SDK_extend.f" included
-    s" %libdir%\ForthEFW\ForthFilterWheel.f" included
-    s" %libdir%\ForthEFW\ForthFilterWheelMaps.f" included
+    s" %libdir%\ForthEFW\Library.f" included
 ;
 ' load.ForthEFW library-loader ForthEFW
 
@@ -126,8 +109,7 @@
 ' load.ForthAstroFormats library-loader ForthAstroFormats
 
 : load.ForthXML ( -- )
-    s" %libdir%\ForthXML\xml.f" included
-    s" %libdir%\ForthXML\xml_maptools.f" included
+    s" %libdir%\ForthXML\Library.f" included
 ;
 ' load.ForthXML library-loader ForthXML
 
@@ -137,17 +119,12 @@
 ' load.ForthPegasusAstro library-loader ForthPegasusAstro
 
 : load.ImageAnalysis ( -- )
-    s" ForthAstroFormats" need-library
     s" %libdir%\ImageAnalysis\Library.f" included
 ;
 ' load.ImageAnalysis library-loader ImageAnalysis
 
 : load.Forth10Micron ( -- )
-    s" %libdir%\Forth10Micron\10Micron_SDK.f" included
-    s" %libdir%\Forth10Micron\10Micron_SDK_extend.f" included
-    s" %libdir%\Forth10Micron\10Micron_SDK_commands.f" included
-    s" %libdir%\Forth10Micron\ForthTelescopeMount.f" included
-    s" %libdir%\Forth10Micron\ForthTelescopeMountMaps.f" included
+    s" %libdir%\Forth10Micron\Library.f" included
 ;
 ' load.Forth10Micron library-loader Forth10Micron
 

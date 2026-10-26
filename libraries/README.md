@@ -64,38 +64,39 @@ same name with a `load.` prefix by convention.
 
 ### Declaring dependencies
 
-Call `need-library` before including files that require the dependency:
+Declare dependencies with `NEED` in the repository's entry file, before its
+internal includes. The manifest only selects that entry:
 
 ```forth
 : load.MyImageTools ( -- )
-    s" ForthAstroFormats" need-library
-    s" %libdir%\MyImageTools\MyImageTools.f" included
+    s" %libdir%\MyImageTools\Library.f" included
 ;
 ' load.MyImageTools library-loader MyImageTools
 ```
 
-Use `s" Dependency" need-library` inside loader definitions, not parsed
-`NEED Dependency`. Loader actions execute later, whereas the manifest is being
-compiled when their definitions are read.
+In `MyImageTools\Library.f`:
+
+```forth
+NEED ForthAstroFormats
+include "%idir%\ImageTools.f"
+```
 
 Registration order does not need to follow dependency order. The entire
 manifest is compiled before any application library is requested.
 
 ### Multiple source files
 
-Keep nonuniform include order explicit:
+Keep internal include order explicit in the repository's entry file:
 
 ```forth
-: load.MyDevice ( -- )
-    s" %libdir%\MyDevice\sdk.f" included
-    s" %libdir%\MyDevice\device.f" included
-    s" %libdir%\MyDevice\metadata.f" included
-;
-' load.MyDevice library-loader MyDevice
+\ MyDevice\Library.f
+include "%idir%\sdk.f"
+include "%idir%\device.f"
+include "%idir%\metadata.f"
 ```
 
-This makes initialization order inspectable and avoids hiding repository
-structure behind another abstraction.
+The manifest does not list those internal files. Existing single-file packages
+can use their source directly as the entry; no wrapper is needed.
 
 Astronomy repositories each have one public `NEED`: `ForthAstroFormats`,
 `ForthAstroCalc`, `ImageAnalysis`, `ForthASTAP`, `ForthSeiza` and
