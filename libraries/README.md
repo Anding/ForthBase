@@ -69,7 +69,6 @@ Call `need-library` before including files that require the dependency:
 ```forth
 : load.MyImageTools ( -- )
     s" ForthAstroFormats" need-library
-    s" ForthRasterIO" need-library
     s" %libdir%\MyImageTools\MyImageTools.f" included
 ;
 ' load.MyImageTools library-loader MyImageTools
@@ -98,18 +97,14 @@ Keep nonuniform include order explicit:
 This makes initialization order inspectable and avoids hiding repository
 structure behind another abstraction.
 
-`ForthAstroFormats` and `AstroImagingInForth` each load their source groups
-in dependency order. Existing format-library names delegate to the consolidated
-formats loader, so older callers do not include the same source twice.
-The formats group loads numerical/display definitions before the consolidated
-`Publication.f`. `ImageAnalysis` delegates to that same loader, so either entry
-point loads the source once without a preview/publication dependency cycle.
-`AstroImagePaths` installs imaging pathname policy; `MountAlignment` loads the
-10Micron-specific metadata computation. Both belong to AstroImagingInForth
-and are also loaded by its integrated manifest.
-`ForthASTAPFocus` remains separate so loading focus support does not select
-ASTAP astrometry. Imaging selects Seiza only while `solve-image` still points
-to `no-solver`.
+Astronomy repositories each have one public `NEED`: `ForthAstroFormats`,
+`ForthAstroCalc`, `ImageAnalysis`, `ForthASTAP`, `ForthSeiza` and
+`AstroImagingInForth`. Each composes its own sources in dependency order;
+internal modules and former aliases have no separate registry entries.
+ForthBase is the exception and retains its smaller utility loaders.
+ImageAnalysis loads statistics, display, stars and focus-curve bindings together.
+AstroImagingInForth includes its own image paths and mount alignment, and loads
+Seiza directly without ASTAP support or conditional solver selection.
 
 ## Diagnostics
 

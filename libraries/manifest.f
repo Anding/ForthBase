@@ -125,33 +125,6 @@
 ;
 ' load.ForthAstroFormats library-loader ForthAstroFormats
 
-: load.ForthXISF ( -- )
-    s" ForthAstroFormats" need-library
-;
-' load.ForthXISF library-loader ForthXISF
-
-\ Existing callers share the consolidated loader, not a second set of includes.
-' load.ForthXISF library-loader ForthAstroPaths
-' load.ForthXISF library-loader ForthRasterIO
-' load.ForthXISF library-loader ForthAtomicFile
-' load.ForthXISF library-loader ForthPublication
-' load.ForthXISF library-loader ForthXISFCodec
-' load.ForthXISF library-loader ForthImageLoaders
-' load.ForthXISF library-loader ForthImageExport
-' load.ForthXISF library-loader ForthAstroMetadata
-' load.ForthXISF library-loader ForthFrameTools
-' load.ForthXISF library-loader BMP
-' load.ForthXISF library-loader FITS_projection
-' load.ForthXISF library-loader ForthPreview
-' load.ForthXISF library-loader ForthAstroSolver
-
-: load.AstroCalc ( -- )
-    s" ForthAstroCalc" need-library
-;
-' load.AstroCalc library-loader AstroCalc
-' load.AstroCalc library-loader SkyRegions
-' load.AstroCalc library-loader TargetLists
-
 : load.ForthXML ( -- )
     s" %libdir%\ForthXML\xml.f" included
     s" %libdir%\ForthXML\xml_maptools.f" included
@@ -169,20 +142,6 @@
 ;
 ' load.ImageAnalysis library-loader ImageAnalysis
 
-: load.StarAnalysis ( -- )
-\ Load the native binding separately from histogram/image statistics.
-    s" ImageAnalysis" need-library
-    s" %libdir%\ImageAnalysis\StarAnalysis.f" included
-    s" FocusCurve" need-library
-;
-' load.StarAnalysis library-loader StarAnalysis
-
-: load.FocusCurve ( -- )
-\ Load only the numerical curve ABI, without frame or equipment dependencies.
-    s" %libdir%\ImageAnalysis\FocusCurve.f" included
-;
-' load.FocusCurve library-loader FocusCurve
-
 : load.Forth10Micron ( -- )
     s" %libdir%\Forth10Micron\10Micron_SDK.f" included
     s" %libdir%\Forth10Micron\10Micron_SDK_extend.f" included
@@ -191,11 +150,6 @@
     s" %libdir%\Forth10Micron\ForthTelescopeMountMaps.f" included
 ;
 ' load.Forth10Micron library-loader Forth10Micron
-
-: load.ForthASTAPFocus ( -- )
-    s" %libdir%\ForthASTAP\ForthASTAPFocus.f" included
-;
-' load.ForthASTAPFocus library-loader ForthASTAPFocus
 
 : load.ForthASTAP ( -- )
     s" %libdir%\ForthASTAP\ForthASTAP.f" included
@@ -206,18 +160,6 @@
     s" %libdir%\ForthSeiza\ForthSeiza.f" included
 ;
 ' load.ForthSeiza library-loader ForthSeiza
-
-: load.AstroImagePaths ( -- )
-    s" ForthAstroFormats" need-library
-    s" %libdir%\AstroImagingInForth\capabilities\ImagePaths.f" included
-;
-' load.AstroImagePaths library-loader AstroImagePaths
-
-: load.MountAlignment ( -- )
-    s" ForthAstroFormats" need-library
-    s" %libdir%\AstroImagingInForth\capabilities\MountAlignment.f" included
-;
-' load.MountAlignment library-loader MountAlignment
 
 : load.AstroImagingInForth ( -- )
     s" %libdir%\AstroImagingInForth\capabilities\AstroImagingInForth.f" included
