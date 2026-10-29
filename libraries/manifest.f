@@ -138,6 +138,12 @@
 ;
 ' load.ForthSeiza library-loader ForthSeiza
 
+: load.ForthSeizaStack ( -- )
+\ Load independent native stacking without selecting an astrometric solver.
+    s" %libdir%\ForthSeiza\ForthSeizaStack.f" included
+;
+' load.ForthSeizaStack library-loader ForthSeizaStack
+
 : load.AstroImagingInForth ( -- )
     s" %libdir%\AstroImagingInForth\capabilities\AstroImagingInForth.f" included
 ;
