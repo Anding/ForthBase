@@ -50,3 +50,11 @@ TSlength buffer: win.Tstring
 : timestamp ( -- caddr u)
     win.Tstring 1 make-timestamp
 ;
+
+LIBRARY: msvcrt.dll
+Extern: int "C" _time32( int * timer );
+
+: utc-epoch-seconds ( -- seconds )
+\ Return UTC seconds since Unix epoch without loading astronomy calculations.
+    0 _time32
+;

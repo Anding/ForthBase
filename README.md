@@ -3,6 +3,11 @@
 Reusable Forth language definitions and the library loader used by the related
 Forth repositories.
 
+`NEED windows` provides `utc-epoch-seconds ( -- seconds )`, UTC Unix epoch
+seconds from the system CRT clock, without astronomy dependencies. Device error
+latches use this clock; observing deadlines use AstroCalc's distinct epoch.
+`windows\epoch_test.f` checks it offline.
+
 Ordinary failures report and return without unwinding the caller. Only heap
 allocation failure uses `ABORT"`. Free failures report and return; callers must
 not reuse freed storage. A full map rejects a new key without changing the map.
